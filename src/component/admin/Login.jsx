@@ -22,11 +22,11 @@ export default function Login() {
       credentials,
     );
 
-    // login(res.data);
-    localStorage.setItem("auth", JSON.stringify(res.data));
-    setAuth(res.data);
+    login(res.data);
 
-    setAuth(res.data);
+    // localStorage.setItem("auth", JSON.stringify(res.data));
+    // setAuth(res.data);
+
     navigate("/");
   };
 

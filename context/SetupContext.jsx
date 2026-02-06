@@ -1,10 +1,16 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import api from "../utils/api.js"; // adjust path
+import { useAuth } from "./AuthContext.jsx";
 
 const SetupContext = createContext(null);
 
 export const SetupProvider = ({ children }) => {
-  const [setup, setSetup] = useState(null);
+  const auth = useAuth("auth");
+  console.log(auth);
+
+  const [setup, setSetup] = useState(auth?.user?.access);
+  console.log(setup);
+
   const [loadingSetup, setLoadingSetup] = useState(true);
 
   const fetchSetup = async () => {

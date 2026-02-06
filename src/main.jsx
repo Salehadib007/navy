@@ -27,6 +27,7 @@ import CustomerEntry from "./component/operation/CustomerEntry";
 import "./index.css";
 import { SetupProvider } from "../context/SetupContext";
 import { AuthProvider } from "../context/AuthContext";
+import PrivateRoute from "./PrivateRoute";
 // import Users from "./component/admin/Users";
 
 const access = getAccess();
@@ -39,7 +40,14 @@ const router = createBrowserRouter([
     path: "/",
     element: <App />,
     children: [
-      { index: true, element: <Home /> },
+      {
+        index: true,
+        element: (
+          <PrivateRoute>
+            <Home />
+          </PrivateRoute>
+        ),
+      },
 
       // OPERATION
       {
@@ -105,7 +113,10 @@ const router = createBrowserRouter([
           <MenuDistribution></MenuDistribution>
         ),
       },
-      { path: "login", element: <Login></Login> },
+      {
+        path: "login",
+        element: <Login></Login>,
+      },
     ],
   },
 ]);
