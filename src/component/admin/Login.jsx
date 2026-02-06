@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../../../utils/api";
 import { useAuth } from "../../../context/AuthContext";
 import axios from "axios";
-import { getAuth } from "../../../utils/auth";
+import { getAuth, setAuth } from "../../../utils/auth";
 // import { setAuth } from "../../../utils/auth";
 
 export default function Login() {
@@ -22,11 +22,11 @@ export default function Login() {
       credentials,
     );
 
-    login(res.data);
-    // localStorage.setItem("auth", JSON.stringify(res.data));
-    // setAuth(res.data);
+    // login(res.data);
+    localStorage.setItem("auth", JSON.stringify(res.data));
+    setAuth(res.data);
 
-    // setAuth(res.data);
+    setAuth(res.data);
     navigate("/");
   };
 

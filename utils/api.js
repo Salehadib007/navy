@@ -8,8 +8,7 @@ const api = axios.create({
   // baseURL: "http://localhost:5000/api",
   withCredentials: true,
 });
-const auth = getAuth();
-console.log(auth);
+
 api.interceptors.request.use((config) => {
   const auth = localStorage.getItem("auth");
   const token = auth ? JSON.parse(auth)?.token : null;
