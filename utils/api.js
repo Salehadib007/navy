@@ -4,7 +4,8 @@ import { getAuth, getToken } from "./auth";
 import { useAuth } from "../context/AuthContext";
 
 const api = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: "https://navy-server.vercel.app/api",
+  // baseURL: "http://localhost:5000/api",
   // withCredentials: true,
 });
 const auth = getAuth();
