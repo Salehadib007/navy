@@ -3,13 +3,16 @@ import api from "../utils/api.js"; // adjust path
 import { useAuth } from "./AuthContext.jsx";
 
 const SetupContext = createContext(null);
-
+const res = await api.get("/setup");
 export const SetupProvider = ({ children }) => {
   const auth = useAuth("auth");
   console.log(auth);
 
   const [setup, setSetup] = useState(auth?.user?.access);
-  console.log(setup);
+
+  const addSetup = (data) => {
+    setSetup(data);
+  };
 
   const [loadingSetup, setLoadingSetup] = useState(true);
 
@@ -18,10 +21,10 @@ export const SetupProvider = ({ children }) => {
       setLoadingSetup(true);
 
       // Example endpoint: GET /setup
-      const res = await api.get("/setup");
 
       // CASE A: backend returns object
       setSetup(res.data);
+      console.log(setup);
 
       // CASE B: backend returns array (most common)
       // setSetup(res.data?.[0] || null);
@@ -35,11 +38,11 @@ export const SetupProvider = ({ children }) => {
 
   useEffect(() => {
     fetchSetup();
-  }, []);
+  }, [res.data]);
 
   return (
     <SetupContext.Provider
-      value={{ setup, setSetup, loadingSetup, fetchSetup }}
+      value={{ setup, setSetup, addSetup, loadingSetup, fetchSetup }}
     >
       {children}
     </SetupContext.Provider>

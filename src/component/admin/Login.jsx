@@ -5,6 +5,7 @@ import api from "../../../utils/api";
 import { useAuth } from "../../../context/AuthContext";
 import axios from "axios";
 import { getAuth, setAuth } from "../../../utils/auth";
+import { useSetup } from "../../../context/SetupContext";
 // import { setAuth } from "../../../utils/auth";
 
 export default function Login() {
@@ -14,6 +15,7 @@ export default function Login() {
   const credentials = { username, password };
   const navigate = useNavigate();
   const { login } = useAuth();
+  const { fetchSetup } = useSetup();
 
   const connect = async (credentials) => {
     const res = await api.post(
@@ -21,7 +23,7 @@ export default function Login() {
       // http://localhost:5000/api
       credentials,
     );
-
+    fetchSetup();
     login(res.data);
 
     // localStorage.setItem("auth", JSON.stringify(res.data));

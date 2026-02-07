@@ -1,131 +1,131 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+// import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App";
-import Home from "./component/Home";
-import Customer from "./component/operation/Customer";
-import Rank from "./component/setup/Rank";
-import VehicleBrand from "./component/setup/VehicleBrand";
-import UserCategory from "./component/setup/UserCategory";
-import JobLocation from "./component/setup/JobLocation";
-import BrtaLocation from "./component/setup/BrtaLocation";
-import BrtaDigit from "./component/setup/BrtaDigit";
-import BloodGroup from "./component/setup/BloodGroup";
-import VehicleModel from "./component/setup/VehicleModel";
-import Employee from "./component/setup/Employee";
-import EnrollmentList from "./component/admin/EnrollmentList";
-import Branch from "./component/setup/Branch";
-import Department from "./component/setup/Department";
-import Designation from "./component/setup/Designation";
+// import Home from "./component/Home";
+// import Customer from "./component/operation/Customer";
+// import Rank from "./component/setup/Rank";
+// import VehicleBrand from "./component/setup/VehicleBrand";
+// import UserCategory from "./component/setup/UserCategory";
+// import JobLocation from "./component/setup/JobLocation";
+// import BrtaLocation from "./component/setup/BrtaLocation";
+// import BrtaDigit from "./component/setup/BrtaDigit";
+// import BloodGroup from "./component/setup/BloodGroup";
+// import VehicleModel from "./component/setup/VehicleModel";
+// import Employee from "./component/setup/Employee";
+// import EnrollmentList from "./component/admin/EnrollmentList";
+// import Branch from "./component/setup/Branch";
+// import Department from "./component/setup/Department";
+// import Designation from "./component/setup/Designation";
 
-import { getAccess } from "../utils/auth";
+// import { getAccess } from "../utils/auth";
 
-import Login from "./component/admin/Login";
-import MenuDistribution from "./component/admin/MenuDistribution";
-import Register from "./component/admin/Register";
-import CustomerEntry from "./component/operation/CustomerEntry";
-import "./index.css";
+// import Login from "./component/admin/Login";
+// import MenuDistribution from "./component/admin/MenuDistribution";
+// import Register from "./component/admin/Register";
+// import CustomerEntry from "./component/operation/CustomerEntry";
+// import "./index.css";
 import { SetupProvider } from "../context/SetupContext";
 import { AuthProvider } from "../context/AuthContext";
-import PrivateRoute from "./PrivateRoute";
+// import PrivateRoute from "./PrivateRoute";
 // import Users from "./component/admin/Users";
 
-const access = getAccess();
+// const access = await getAccess();
 
-console.log(access);
+// console.log("this is access" + access);
 
-const can = (permission) => access.includes(permission);
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <App />,
-    children: [
-      {
-        index: true,
-        element: (
-          <PrivateRoute>
-            <Home />
-          </PrivateRoute>
-        ),
-      },
+// const can = (permission) => access.includes(permission);
+// const router = createBrowserRouter([
+//   {
+//     path: "/",
+//     element: <App />,
+//     children: [
+//       {
+//         index: true,
+//         element: (
+//           <PrivateRoute>
+//             <Home />
+//           </PrivateRoute>
+//         ),
+//       },
 
-      // OPERATION
-      {
-        path: "enrollment",
-        element: can("Enrollment") && <Customer></Customer>,
-      },
-      {
-        path: "customerEntry",
-        element: can("Enrollment") && <CustomerEntry></CustomerEntry>,
-      },
+//       // OPERATION
+//       {
+//         path: "enrollment",
+//         element: can("Enrollment") && <Customer></Customer>,
+//       },
+//       {
+//         path: "customerEntry",
+//         element: can("Enrollment") && <CustomerEntry></CustomerEntry>,
+//       },
 
-      // SETUP
-      { path: "branch", element: can("Setup.Branch") && <Branch /> },
-      { path: "rank", element: can("Setup.Rank") && <Rank></Rank> },
-      {
-        path: "vehicle-brand",
-        element: can("Setup.VehicleBrand") && <VehicleBrand />,
-      },
-      {
-        path: "user-category",
-        element: can("Setup.UserCategory") && <UserCategory />,
-      },
-      {
-        path: "job-location",
-        element: can("Setup.JobLocation") && <JobLocation />,
-      },
-      {
-        path: "brta-location",
-        element: can("Setup.BRTALocation") && <BrtaLocation />,
-      },
-      { path: "brta-digit", element: can("Setup.BRTADigit") && <BrtaDigit /> },
-      {
-        path: "blood-group",
-        element: can("Setup.BloodGroup") && <BloodGroup />,
-      },
-      {
-        path: "vehicle-model",
-        element: can("Setup.VehicleModel") && <VehicleModel />,
-      },
-      { path: "employee", element: can("Setup.Employee") && <Employee /> },
-      {
-        path: "department",
-        element: can("Setup.Department") && <Department />,
-      },
-      {
-        path: "designation",
-        element: can("Setup.Designation") && <Designation />,
-      },
+//       // SETUP
+//       { path: "branch", element: can("Setup.Branch") && <Branch /> },
+//       { path: "rank", element: can("Setup.Rank") && <Rank></Rank> },
+//       {
+//         path: "vehicle-brand",
+//         element: can("Setup.VehicleBrand") && <VehicleBrand />,
+//       },
+//       {
+//         path: "user-category",
+//         element: can("Setup.UserCategory") && <UserCategory />,
+//       },
+//       {
+//         path: "job-location",
+//         element: can("Setup.JobLocation") && <JobLocation />,
+//       },
+//       {
+//         path: "brta-location",
+//         element: can("Setup.BRTALocation") && <BrtaLocation />,
+//       },
+//       { path: "brta-digit", element: can("Setup.BRTADigit") && <BrtaDigit /> },
+//       {
+//         path: "blood-group",
+//         element: can("Setup.BloodGroup") && <BloodGroup />,
+//       },
+//       {
+//         path: "vehicle-model",
+//         element: can("Setup.VehicleModel") && <VehicleModel />,
+//       },
+//       { path: "employee", element: can("Setup.Employee") && <Employee /> },
+//       {
+//         path: "department",
+//         element: can("Setup.Department") && <Department />,
+//       },
+//       {
+//         path: "designation",
+//         element: can("Setup.Designation") && <Designation />,
+//       },
 
-      // // REPORT / ADMIN
-      {
-        path: "register",
-        element: can("CreateUser") && <Register></Register>,
-      },
-      // { path: "register", element: can("CreateUser") && <Users /> },
-      {
-        path: "enrollment-list",
-        element: can("Setup.Manage") && <EnrollmentList />,
-      },
-      {
-        path: "menu-distribution",
-        element: can("MenuDistribution") && (
-          <MenuDistribution></MenuDistribution>
-        ),
-      },
-      {
-        path: "login",
-        element: <Login></Login>,
-      },
-    ],
-  },
-]);
+//       // // REPORT / ADMIN
+//       {
+//         path: "register",
+//         element: can("CreateUser") && <Register></Register>,
+//       },
+//       // { path: "register", element: can("CreateUser") && <Users /> },
+//       {
+//         path: "enrollment-list",
+//         element: can("Setup.Manage") && <EnrollmentList />,
+//       },
+//       {
+//         path: "menu-distribution",
+//         element: can("MenuDistribution") && (
+//           <MenuDistribution></MenuDistribution>
+//         ),
+//       },
+//       {
+//         path: "login",
+//         element: <Login></Login>,
+//       },
+//     ],
+//   },
+// ]);
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AuthProvider>
       <SetupProvider>
-        <RouterProvider router={router} />
+        <App />
       </SetupProvider>
     </AuthProvider>
   </StrictMode>,

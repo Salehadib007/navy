@@ -15,10 +15,13 @@ export default function Navbar() {
   const [mobileSub, setMobileSub] = useState(null);
 
   // const auth = JSON.parse(localStorage.getItem("auth"));
-  const { auth } = useAuth();
+  const { auth, logout } = useAuth();
+  console.log(auth?.user?.username);
+
   const access = auth?.user?.access || [];
-  const logout = () => {
-    localStorage.removeItem("auth");
+  const logitout = () => {
+    logout();
+    // localStorage.removeItem("auth");
     navigate("/login");
   };
 
@@ -108,7 +111,7 @@ export default function Navbar() {
       ],
     },
     {
-      name: "HI SUPERUSER",
+      name: `${auth?.user?.username}`,
       icon: <MdSupervisorAccount />,
       sub: [{ label: "Logout", path: "/login" }],
     },
@@ -161,7 +164,7 @@ export default function Navbar() {
                           to={sub.path}
                           className="block px-4 py-2
                         hover:bg-emerald-100 hover:text-emerald-600"
-                          onClick={sub.label === "Logout" ? logout : ""}
+                          onClick={sub.label === "Logout" ? logitout : ""}
                         >
                           {sub.label}
                         </Link>
