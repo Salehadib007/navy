@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../../../utils/api"; // adjust path
 import EditModal from "./EditModal";
+import { useNavigate } from "react-router-dom";
+import { PrinterIcon } from "lucide-react";
+// import QRCode from "qrcode";
 
 export default function Customer() {
   // ===============================
@@ -23,6 +26,42 @@ export default function Customer() {
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [form, setForm] = useState({});
   const [uploading, setUploading] = useState(false);
+
+  const [selectedIds, setSelectedIds] = useState([]);
+  const navigate = useNavigate();
+
+  const toggleSelect = (id) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
+    );
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedIds.length === currentData.length) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(currentData.map((item) => item._id));
+    }
+  };
+
+  const generateQr = async () => {
+    console.log(selectedIds);
+
+    if (!selectedIds.length) return alert("Select enrollments first!");
+
+    try {
+      console.log(selectedIds);
+
+      navigate("/enrollment-list", {
+        state: {
+          ids: selectedIds,
+        },
+      });
+    } catch (err) {
+      console.error(err);
+      alert("Failed to generate qr-code");
+    }
+  };
 
   // ===============================
   // Fetch enrollments
@@ -120,9 +159,22 @@ export default function Customer() {
       <div className="max-w-7xl mx-auto bg-white rounded-xl shadow p-4">
         {/* Header */}
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold text-gray-700">
-            Customer Entry
-          </h2>
+          <div className="flex items-center gap-3">
+            <h2 className="text-lg font-semibold text-gray-700">
+              Customer Entry
+            </h2>
+            <div className="bg-red-500 rounded-full w-8 h-8 flex cursor-pointer items-center justify-center">
+              <PrinterIcon onClick={generateQr} color="white">
+                {/* <button
+                  disabled={selectedIds.length === 0}
+                  onClick={generateQr}
+                  className="bg-indigo-600 text-white px-4 py-2 rounded disabled:opacity-50"
+                >
+                  Generate QR ({selectedIds.length})
+                </button> */}
+              </PrinterIcon>
+            </div>
+          </div>
           <Link
             to="/customerEntry"
             className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm"
@@ -140,6 +192,16 @@ export default function Customer() {
               <table className="min-w-[1100px] w-full text-sm">
                 <thead className="bg-gray-800 text-white">
                   <tr>
+                    <th className="px-3 py-2">
+                      <input
+                        type="checkbox"
+                        checked={
+                          currentData.length > 0 &&
+                          selectedIds.length === currentData.length
+                        }
+                        onChange={toggleSelectAll}
+                      />
+                    </th>
                     <th className="px-3 py-2">#</th>
                     <th className="px-3 py-2">Profile</th>
                     <th className="px-3 py-2">PNO</th>
@@ -154,6 +216,13 @@ export default function Customer() {
                 <tbody>
                   {currentData.map((item, idx) => (
                     <tr key={item._id} className="border-b hover:bg-gray-50">
+                      <td className="px-3 py-2">
+                        <input
+                          type="checkbox"
+                          checked={selectedIds.includes(item._id)}
+                          onChange={() => toggleSelect(item._id)}
+                        />
+                      </td>
                       <td className="px-3 py-2">{startIndex + idx + 1}</td>
                       <td className="px-3 py-2">
                         <img

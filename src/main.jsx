@@ -13,7 +13,6 @@ import App from "./App";
 // import BloodGroup from "./component/setup/BloodGroup";
 // import VehicleModel from "./component/setup/VehicleModel";
 // import Employee from "./component/setup/Employee";
-// import EnrollmentList from "./component/admin/EnrollmentList";
 // import Branch from "./component/setup/Branch";
 // import Department from "./component/setup/Department";
 // import Designation from "./component/setup/Designation";
@@ -103,10 +102,6 @@ import { AuthProvider } from "../context/AuthContext";
 //         element: can("CreateUser") && <Register></Register>,
 //       },
 //       // { path: "register", element: can("CreateUser") && <Users /> },
-//       {
-//         path: "enrollment-list",
-//         element: can("Setup.Manage") && <EnrollmentList />,
-//       },
 //       {
 //         path: "menu-distribution",
 //         element: can("MenuDistribution") && (

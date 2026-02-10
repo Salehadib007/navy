@@ -14,7 +14,6 @@ import BrtaDigit from "./component/setup/BrtaDigit";
 import BloodGroup from "./component/setup/BloodGroup";
 import VehicleModel from "./component/setup/VehicleModel";
 import Employee from "./component/setup/Employee";
-import EnrollmentList from "./component/admin/EnrollmentList";
 import Branch from "./component/setup/Branch";
 import Department from "./component/setup/Department";
 import Designation from "./component/setup/Designation";
@@ -29,6 +28,8 @@ import "./index.css";
 import { SetupProvider, useSetup } from "../context/SetupContext";
 import { AuthProvider, useAuth } from "../context/AuthContext";
 import PrivateRoute from "./PrivateRoute";
+import AutoQRCode from "./component/admin/AutoCode";
+import VehiclePass from "./component/admin/VehiclePass";
 
 const App = () => {
   const { auth } = useAuth();
@@ -109,7 +110,11 @@ const App = () => {
         // { path: "register", element: can("CreateUser") && <Users /> },
         {
           path: "enrollment-list",
-          element: can("Setup.Manage") && <EnrollmentList />,
+          element: can("Enrollment") && <AutoQRCode />,
+        },
+        {
+          path: "show-data/:id",
+          element: <VehiclePass />,
         },
         {
           path: "menu-distribution",
