@@ -16,7 +16,7 @@ export default function Navbar() {
 
   // const auth = JSON.parse(localStorage.getItem("auth"));
   const { auth, logout } = useAuth();
-  console.log(auth?.user?.username);
+  // console.log(auth?.user?.username);
 
   const access = auth?.user?.access || [];
   const logitout = () => {

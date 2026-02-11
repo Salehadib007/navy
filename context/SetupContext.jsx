@@ -6,7 +6,7 @@ const SetupContext = createContext(null);
 const res = await api.get("/setup");
 export const SetupProvider = ({ children }) => {
   const auth = useAuth("auth");
-  console.log(auth);
+  // console.log(auth);
 
   const [setup, setSetup] = useState(auth?.user?.access);
 
@@ -24,12 +24,12 @@ export const SetupProvider = ({ children }) => {
 
       // CASE A: backend returns object
       setSetup(res.data);
-      console.log(setup);
+      // console.log(setup);
 
       // CASE B: backend returns array (most common)
       // setSetup(res.data?.[0] || null);
     } catch (err) {
-      console.log("Setup fetch error:", err);
+      // console.log("Setup fetch error:", err);
       setSetup(null);
     } finally {
       setLoadingSetup(false);

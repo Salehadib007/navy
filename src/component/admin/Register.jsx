@@ -91,7 +91,7 @@ export default function Register() {
       const list = Array.isArray(res.data) ? res.data : res.data?.data || [];
       setUsers(list);
     } catch (err) {
-      console.log("Users fetch error:", err);
+      // console.log("Users fetch error:", err);
       setUsers([]);
     } finally {
       setLoadingUsers(false);
@@ -180,7 +180,7 @@ export default function Register() {
       await fetchUsers();
       setPage(1);
     } catch (err) {
-      console.log("Create user error:", err);
+      // console.log("Create user error:", err);
       alert(err?.response?.data?.message || "Failed to create user");
     }
   };
@@ -239,7 +239,7 @@ export default function Register() {
       closeEditModal();
       await fetchUsers();
     } catch (err) {
-      console.log("Update user error:", err);
+      // console.log("Update user error:", err);
       alert(err?.response?.data?.message || "Failed to update user");
     }
   };
@@ -255,7 +255,7 @@ export default function Register() {
       await api.delete(`/auth/${user._id}`);
       await fetchUsers();
     } catch (err) {
-      console.log("Delete user error:", err);
+      // console.log("Delete user error:", err);
       alert(err?.response?.data?.message || "Failed to delete user");
     }
   };
@@ -301,7 +301,7 @@ export default function Register() {
       alert("Password updated successfully");
       closeResetModal();
     } catch (err) {
-      console.log("Reset password error:", err);
+      // console.log("Reset password error:", err);
       alert(err?.response?.data?.message || "Failed to reset password");
     }
   };

@@ -45,12 +45,12 @@ export default function Customer() {
   };
 
   const generateQr = async () => {
-    console.log(selectedIds);
+    // console.log(selectedIds);
 
     if (!selectedIds.length) return alert("Select enrollments first!");
 
     try {
-      console.log(selectedIds);
+      // console.log(selectedIds);
 
       navigate("/enrollment-list", {
         state: {
@@ -86,7 +86,7 @@ export default function Customer() {
   // Open Modal
   // ===============================
   const openEditModal = (customer) => {
-    console.log(customer);
+    // console.log(customer);
 
     setSelectedCustomer(customer);
     setForm({ ...customer }); // load all fields from backend

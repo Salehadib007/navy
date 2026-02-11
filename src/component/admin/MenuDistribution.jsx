@@ -43,7 +43,7 @@ export default function MenuDistribution() {
       const res = await api.get("/auth");
       setUsers(res.data || []);
     } catch (err) {
-      console.log("Fetch users error:", err);
+      // console.log("Fetch users error:", err);
       alert(err?.response?.data?.message || "Failed to fetch users");
     } finally {
       setLoadingUsers(false);
@@ -173,7 +173,7 @@ export default function MenuDistribution() {
 
       alert(res?.data?.message || "Menu permissions updated!");
     } catch (err) {
-      console.log("Submit error:", err);
+      // console.log("Submit error:", err);
       alert(err?.response?.data?.message || "Failed to update permissions");
     }
   };

@@ -58,7 +58,7 @@ export default function Users() {
       const res = await api.get("/auth");
       setUsers(res.data || []);
     } catch (err) {
-      console.log("Fetch users error:", err);
+      // console.log("Fetch users error:", err);
       alert(err?.response?.data?.message || "Failed to fetch users");
     } finally {
       setLoadingUsers(false);
@@ -138,7 +138,7 @@ export default function Users() {
       setSelectedUser(null);
       await fetchUsers();
     } catch (err) {
-      console.log("Update user error:", err);
+      // console.log("Update user error:", err);
       alert(err?.response?.data?.message || "Failed to update user");
     }
   };
@@ -156,7 +156,7 @@ export default function Users() {
       alert(res?.data?.message || "User deleted");
       await fetchUsers();
     } catch (err) {
-      console.log("Delete user error:", err);
+      // console.log("Delete user error:", err);
       alert(err?.response?.data?.message || "Failed to delete user");
     }
   };
@@ -186,7 +186,7 @@ export default function Users() {
       setSelectedUser(null);
       setPasswordForm({ password: "", confirmPassword: "" });
     } catch (err) {
-      console.log("Password update error:", err);
+      // console.log("Password update error:", err);
       alert(err?.response?.data?.message || "Failed to update password");
     }
   };

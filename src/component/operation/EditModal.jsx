@@ -8,7 +8,7 @@ export default function EditModal({ enrollmentInfo, onClose, onUpdated }) {
   const [enrollmentData, setEnrollmentData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
-  console.log(enrollmentInfo);
+  // console.log(enrollmentInfo);
   const enrollmentId = enrollmentInfo._id;
   // ===================== Fetch single enrollment =====================
   const fetchEnrollment = async () => {

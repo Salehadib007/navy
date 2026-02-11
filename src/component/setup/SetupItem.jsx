@@ -100,7 +100,7 @@ export default function SetupItem({
       setIsAddOpen(false);
       await fetchSetup();
     } catch (err) {
-      console.log("Add error:", err);
+      // console.log("Add error:", err);
       alert(err.response?.data?.message || "Failed to add item");
     }
   };
@@ -131,7 +131,7 @@ export default function SetupItem({
       setIsUpdateOpen(false);
       await fetchSetup();
     } catch (err) {
-      console.log("Update error:", err);
+      // console.log("Update error:", err);
       alert(err.response?.data?.message || "Failed to update item");
     }
   };
@@ -151,7 +151,7 @@ export default function SetupItem({
       setIsDeleteOpen(false);
       await fetchSetup();
     } catch (err) {
-      console.log("Delete error:", err);
+      // console.log("Delete error:", err);
       alert(err.response?.data?.message || "Failed to delete item");
     }
   };
