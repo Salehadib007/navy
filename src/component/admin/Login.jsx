@@ -1,35 +1,44 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { FaUser, FaLock } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import api from "../../../utils/api";
 import { useAuth } from "../../../context/AuthContext";
-import axios from "axios";
-import { getAuth, setAuth } from "../../../utils/auth";
 import { useSetup } from "../../../context/SetupContext";
-// import { setAuth } from "../../../utils/auth";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const credentials = { username, password };
-  const navigate = useNavigate();
-  const { login } = useAuth();
+  const { auth, login } = useAuth();
   const { fetchSetup } = useSetup();
+  const navigate = useNavigate();
+
+  const credentials = { username, password };
+
+  // ✅ Redirect to home if already logged in
+  useEffect(() => {
+    if (auth) {
+      navigate("/"); // redirect to home
+    }
+  }, [auth, navigate]);
 
   const connect = async (credentials) => {
-    const res = await api.post(
-      "/auth/login",
-      // http://localhost:5000/api
-      credentials,
-    );
-    fetchSetup();
-    login(res.data);
+    try {
+      const res = await api.post("/auth/login", credentials);
 
-    // localStorage.setItem("auth", JSON.stringify(res.data));
-    // setAuth(res.data);
+      fetchSetup();
 
-    navigate("/");
+      // Update context
+      login(res.data);
+
+      // Persist in localStorage
+      localStorage.setItem("auth", JSON.stringify(res.data));
+
+      navigate("/"); // go home
+    } catch (error) {
+      console.error(error);
+      alert("Login failed");
+    }
   };
 
   return (
@@ -40,17 +49,14 @@ export default function Login() {
           "url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d')",
       }}
     >
-      {/* Overlay */}
       <div className="absolute inset-0 bg-white/70"></div>
 
-      {/* Login Card */}
       <div className="relative z-10 w-full max-w-md bg-[#e9e8e2] rounded-md shadow-lg px-8 py-10">
-        {/* Logo */}
         <div className="flex flex-col items-center mb-6">
           <div className="w-20 h-20 mb-3">
             <img
               src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Anchor.svg/1200px-Anchor.svg.png"
-              alt="NPM Logo"
+              alt="Logo"
               className="w-full h-full object-contain"
             />
           </div>
@@ -67,7 +73,6 @@ export default function Login() {
           LOGIN
         </h2>
 
-        {/* Username */}
         <div className="mb-4 relative">
           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
             <FaUser />
@@ -81,7 +86,6 @@ export default function Login() {
           />
         </div>
 
-        {/* Password */}
         <div className="mb-6 relative">
           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
             <FaLock />
@@ -95,7 +99,6 @@ export default function Login() {
           />
         </div>
 
-        {/* Button */}
         <button
           onClick={() => connect(credentials)}
           className="w-full border border-gray-400 py-2 rounded-md font-medium hover:bg-gray-200 transition"
