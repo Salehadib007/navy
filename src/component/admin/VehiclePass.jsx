@@ -12,7 +12,6 @@ const VehiclePass = () => {
       try {
         const res = await api.get(`/enrollment/${id}`);
         setUser(res.data[0]);
-        console.log(res.data);
       } catch (err) {
         console.error(err);
       } finally {
@@ -28,22 +27,23 @@ const VehiclePass = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 py-10 print:bg-white print:py-0">
-      {/* A4 PAGE */}
+      {/* CARD / PAGE */}
       <div
         className="
           mx-auto bg-white text-black
-          w-[210mm] min-h-[297mm]
-          p-8 border border-black
-          print:border-none
+          w-full max-w-3xl
+          p-6 md:p-8 border border-black
+          rounded-md shadow-md
+          print:border-none print:shadow-none
         "
       >
         {/* HEADER */}
         <header className="text-center border-b border-black pb-4 mb-6">
-          <h1 className="text-2xl font-bold uppercase">
+          <h1 className="text-xl md:text-2xl font-bold uppercase">
             Official Enrollment Data
           </h1>
           <p className="text-sm mt-1">
-            User Type :{" "}
+            User Type:{" "}
             <span className="font-semibold">{user.userCategory}</span>
           </p>
         </header>
@@ -54,7 +54,7 @@ const VehiclePass = () => {
             Personnel Information
           </h2>
 
-          <div className="grid grid-cols-2 gap-y-2 text-sm">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
             <span className="font-semibold">Full Name</span>
             <span>{user.fullName}</span>
 
@@ -81,7 +81,7 @@ const VehiclePass = () => {
             Vehicle Information
           </h2>
 
-          <div className="grid grid-cols-2 gap-y-2 text-sm">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
             <span className="font-semibold">Vehicle Type</span>
             <span>{user.vehicleType}</span>
 
@@ -109,7 +109,7 @@ const VehiclePass = () => {
             Driver Information
           </h2>
 
-          <div className="grid grid-cols-2 gap-y-2 text-sm">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
             <span className="font-semibold">Driver Name</span>
             <span>{user.driverName}</span>
 
@@ -127,7 +127,7 @@ const VehiclePass = () => {
             Attachments
           </h2>
 
-          <div className="flex gap-4 flex-wrap">
+          <div className="flex flex-wrap gap-4">
             {user.profileImage && (
               <img
                 src={user.profileImage}
@@ -160,7 +160,7 @@ const VehiclePass = () => {
         </section>
 
         {/* FOOTER */}
-        <footer className="flex justify-between items-end text-xs mt-10">
+        <footer className="flex flex-col md:flex-row justify-between items-start md:items-end text-xs mt-10 gap-4 md:gap-0">
           <div>
             <p>Issue Date: {user.issueDate}</p>
             <p>Document ID: {user._id}</p>
@@ -172,7 +172,7 @@ const VehiclePass = () => {
         </footer>
       </div>
 
-      {/* PRINT BUTTON (hidden in print) */}
+      {/* PRINT BUTTON */}
       <div className="text-center mt-6 print:hidden">
         <button
           onClick={() => window.print()}
