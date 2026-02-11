@@ -18,7 +18,6 @@ const VehiclePass = () => {
         setLoading(false);
       }
     };
-
     fetchUser();
   }, [id]);
 
@@ -53,24 +52,23 @@ const VehiclePass = () => {
           <h2 className="font-semibold border-b border-black mb-3">
             Personnel Information
           </h2>
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
-            <span className="font-semibold">Full Name</span>
+            <span className="font-semibold">Full Name:</span>
             <span>{user.fullName}</span>
 
-            <span className="font-semibold">Rank</span>
+            <span className="font-semibold">Rank:</span>
             <span>{user.officialRank}</span>
 
-            <span className="font-semibold">P No</span>
+            <span className="font-semibold">P No:</span>
             <span>{user.pno}</span>
 
-            <span className="font-semibold">Blood Group</span>
+            <span className="font-semibold">Blood Group:</span>
             <span>{user.bloodGroup}</span>
 
-            <span className="font-semibold">Mobile</span>
+            <span className="font-semibold">Mobile:</span>
             <span>{user.primaryMobile}</span>
 
-            <span className="font-semibold">Email</span>
+            <span className="font-semibold">Email:</span>
             <span>{user.email}</span>
           </div>
         </section>
@@ -80,25 +78,24 @@ const VehiclePass = () => {
           <h2 className="font-semibold border-b border-black mb-3">
             Vehicle Information
           </h2>
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
-            <span className="font-semibold">Vehicle Type</span>
+            <span className="font-semibold">Vehicle Type:</span>
             <span>{user.vehicleType}</span>
 
-            <span className="font-semibold">Brand / Model</span>
+            <span className="font-semibold">Brand / Model:</span>
             <span>
               {user.vehicleBrand} / {user.vehicleModel}
             </span>
 
-            <span className="font-semibold">Registration No</span>
+            <span className="font-semibold">Registration No:</span>
             <span>{user.registrationNo}</span>
 
-            <span className="font-semibold">Chassis / Engine</span>
+            <span className="font-semibold">Chassis / Engine:</span>
             <span>
               {user.chassisNumber} / {user.engineNumber}
             </span>
 
-            <span className="font-semibold">Job Location</span>
+            <span className="font-semibold">Job Location:</span>
             <span>{user.jobLocation}</span>
           </div>
         </section>
@@ -108,15 +105,14 @@ const VehiclePass = () => {
           <h2 className="font-semibold border-b border-black mb-3">
             Driver Information
           </h2>
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
-            <span className="font-semibold">Driver Name</span>
+            <span className="font-semibold">Driver Name:</span>
             <span>{user.driverName}</span>
 
-            <span className="font-semibold">Driving License</span>
+            <span className="font-semibold">Driving License:</span>
             <span>{user.drivingLicenseNo}</span>
 
-            <span className="font-semibold">License Expiry</span>
+            <span className="font-semibold">License Expiry:</span>
             <span>{user.licenseExpireDate}</span>
           </div>
         </section>
@@ -126,7 +122,6 @@ const VehiclePass = () => {
           <h2 className="font-semibold border-b border-black mb-3">
             Attachments
           </h2>
-
           <div className="flex flex-wrap gap-4">
             {user.profileImage && (
               <img
