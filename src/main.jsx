@@ -120,9 +120,7 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AuthProvider>
       <SetupProvider>
-        <div data-theme="light">
-          <App />
-        </div>
+        <App />
       </SetupProvider>
     </AuthProvider>
   </StrictMode>,
