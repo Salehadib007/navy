@@ -10,11 +10,13 @@ import { FaBus } from "react-icons/fa6";
 import { GiWeightLiftingUp } from "react-icons/gi";
 import { HiOutlineIdentification } from "react-icons/hi";
 import { MdOutlineCreditCardOff, MdOutlinePayments } from "react-icons/md";
+import api from "../../utils/api.js";
 import { getAuth, setAuth } from "../../utils/auth";
 import { useNavigate } from "react-router-dom";
 
 export default function Home() {
-  const stats = [
+  const [enrollments, setEnrollments] = useState([]);
+  const [stats, setStats] = useState([
     {
       title: "Total Vehicle",
       value: 678,
@@ -57,7 +59,155 @@ export default function Home() {
       icon: <MdOutlineCreditCardOff />,
       color: "bg-purple-100 text-purple-700 hover:bg-purple-200",
     },
-  ];
+  ]);
+
+  const fetchEnrollments = async () => {
+    try {
+      const res = await api.get("/enrollment");
+      // const data = await res.json();
+      console.log(res.data);
+
+      setEnrollments(res.data);
+    } catch (error) {
+      console.error("Failed to fetch enrollments", error);
+    }
+  };
+  const isExpired = (date) => {
+    if (!date) return false;
+    return new Date(date) < new Date();
+  };
+
+  const getTotalVehicles = (data) => data.length;
+  const getActiveVehicles = (data) =>
+    data.filter(
+      (item) =>
+        !isExpired(item.validity) &&
+        !isExpired(item.fitness) &&
+        !isExpired(item.sticker) &&
+        !isExpired(item.licenseExpireDate),
+    ).length;
+
+  const getInactiveVehicles = (data) =>
+    data.filter(
+      (item) =>
+        isExpired(item.validity) ||
+        isExpired(item.fitness) ||
+        isExpired(item.sticker) ||
+        isExpired(item.licenseExpireDate),
+    ).length;
+  const getTaxTokenExpired = (data) =>
+    data.filter((item) => isExpired(item.taxToken)).length;
+  const getFitnessExpired = (data) =>
+    data.filter((item) => isExpired(item.fitness)).length;
+  const getStickerExpired = (data) =>
+    data.filter((item) => isExpired(item.sticker)).length;
+  const getLicenseExpired = (data) =>
+    data.filter((item) => isExpired(item.licenseExpireDate)).length;
+  useEffect(() => {
+    fetchEnrollments();
+  }, []);
+
+  useEffect(() => {
+    if (enrollments.length === 0) return;
+
+    const total = getTotalVehicles(enrollments);
+    const active = getActiveVehicles(enrollments);
+    const inactive = getInactiveVehicles(enrollments);
+    const taxExpired = getTaxTokenExpired(enrollments);
+    const fitnessExpired = getFitnessExpired(enrollments);
+    const stickerExpired = getStickerExpired(enrollments);
+    const licenseExpired = getLicenseExpired(enrollments);
+
+    setStats([
+      {
+        title: "Total Vehicle",
+        value: total,
+        icon: <FaCar />,
+        color: "bg-blue-100 text-blue-700 hover:bg-blue-200",
+      },
+      {
+        title: "Active",
+        value: active,
+        icon: <FaCheckCircle />,
+        color: "bg-green-100 text-green-700 hover:bg-green-200",
+      },
+      {
+        title: "Inactive",
+        value: inactive,
+        icon: <FaTimesCircle />,
+        color: "bg-pink-100 text-pink-700 hover:bg-pink-200",
+      },
+      {
+        title: "Tax Token Expired",
+        value: taxExpired,
+        icon: <MdOutlinePayments />,
+        color: "bg-orange-100 text-orange-700 hover:bg-orange-200",
+      },
+      {
+        title: "Fitness Expired",
+        value: fitnessExpired,
+        icon: <GiWeightLiftingUp />,
+        color: "bg-indigo-100 text-indigo-700 hover:bg-indigo-200",
+      },
+      {
+        title: "Sticker Expired",
+        value: stickerExpired,
+        icon: <HiOutlineIdentification />,
+        color: "bg-fuchsia-100 text-fuchsia-700 hover:bg-fuchsia-200",
+      },
+      {
+        title: "Driving Licence Expired",
+        value: licenseExpired,
+        icon: <MdOutlineCreditCardOff />,
+        color: "bg-purple-100 text-purple-700 hover:bg-purple-200",
+      },
+    ]);
+  }, [enrollments]);
+
+  // const stats = [
+  //   {
+  //     title: "Total Vehicle",
+  //     value: 678,
+  //     icon: <FaCar />,
+  //     color: "bg-blue-100 text-blue-700 hover:bg-blue-200",
+  //   },
+  //   {
+  //     title: "Active",
+  //     value: 655,
+  //     icon: <FaCheckCircle />,
+  //     color: "bg-green-100 text-green-700 hover:bg-green-200",
+  //   },
+  //   {
+  //     title: "Inactive",
+  //     value: 23,
+  //     icon: <FaTimesCircle />,
+  //     color: "bg-pink-100 text-pink-700 hover:bg-pink-200",
+  //   },
+  //   {
+  //     title: "Tax Token Expired",
+  //     value: 146,
+  //     icon: <MdOutlinePayments />,
+  //     color: "bg-orange-100 text-orange-700 hover:bg-orange-200",
+  //   },
+  //   {
+  //     title: "Fitness Expired",
+  //     value: 6,
+  //     icon: <GiWeightLiftingUp />,
+  //     color: "bg-indigo-100 text-indigo-700 hover:bg-indigo-200",
+  //   },
+  //   {
+  //     title: "Sticker Expired",
+  //     value: 0,
+  //     icon: <HiOutlineIdentification />,
+  //     color: "bg-fuchsia-100 text-fuchsia-700 hover:bg-fuchsia-200",
+  //   },
+  //   {
+  //     title: "Driving Licence Expired",
+  //     value: 43,
+  //     icon: <MdOutlineCreditCardOff />,
+  //     color: "bg-purple-100 text-purple-700 hover:bg-purple-200",
+  //   },
+  // ];
 
   return (
     <div className="p-4 md:p-6 bg-gray-100 min-h-screen">

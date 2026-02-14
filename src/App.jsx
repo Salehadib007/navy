@@ -30,6 +30,7 @@ import { AuthProvider, useAuth } from "../context/AuthContext";
 import PrivateRoute from "./PrivateRoute";
 import AutoQRCode from "./component/admin/AutoCode";
 import VehiclePass from "./component/admin/VehiclePass";
+import EnrollmentDetails from "./component/operation/EnrollmentDetails";
 
 const App = () => {
   const { auth } = useAuth();
@@ -59,6 +60,10 @@ const App = () => {
         {
           path: "customerEntry",
           element: can("Enrollment") && <CustomerEntry></CustomerEntry>,
+        },
+        {
+          path: "enrollment-details",
+          element: can("Enrollment") && <EnrollmentDetails></EnrollmentDetails>,
         },
 
         // SETUP

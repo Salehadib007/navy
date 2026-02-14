@@ -103,6 +103,15 @@ export default function Customer() {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
 
+  const showDetails = async (id) => {
+    const res = await api.get(`/enrollment/${id}`);
+    navigate("/enrollment-details", {
+      state: {
+        enrollment: res.data,
+      },
+    });
+  };
+
   // ===============================
   // Update Enrollment
   // ===============================
@@ -231,7 +240,12 @@ export default function Customer() {
                           className="w-10 h-10 rounded-full border"
                         />
                       </td>
-                      <td className="px-3 py-2">{item.pno}</td>
+                      <td
+                        className="px-3 py-2 cursor-pointer"
+                        onClick={() => showDetails(item._id)}
+                      >
+                        {item.pno}
+                      </td>
                       <td className="px-3 py-2">{item.fullName}</td>
                       <td className="px-3 py-2">{item.primaryMobile}</td>
                       <td className="px-3 py-2">{item.brNoOrNid}</td>

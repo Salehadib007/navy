@@ -341,6 +341,7 @@ export default function CustomerEntry() {
               />
 
               <Input
+                type="date"
                 label="Validity"
                 required
                 name="validity"
@@ -350,6 +351,7 @@ export default function CustomerEntry() {
 
               <div className="flex gap-2 items-end">
                 <Input
+                  type="date"
                   label="Tax Token"
                   required
                   name="taxToken"
@@ -372,6 +374,7 @@ export default function CustomerEntry() {
 
               <div className="flex gap-2 items-end">
                 <Input
+                  type="date"
                   label="Fitness"
                   name="fitness"
                   value={enrollment.fitness}
@@ -393,6 +396,7 @@ export default function CustomerEntry() {
 
               <div className="flex gap-2 items-end">
                 <Input
+                  type="date"
                   label="Sticker"
                   name="sticker"
                   value={enrollment.sticker}
