@@ -5,7 +5,7 @@ export default function VehicleBrand() {
   return (
     <SetupItem
       setupKey="VehicleBrand"
-      title="Vehicle Brand Setup"
+      title="Vehicle Type Setup"
       placeholder="Vehicle Brand Name"
     />
   );

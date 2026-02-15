@@ -103,6 +103,9 @@ export default function Home() {
     data.filter((item) => isExpired(item.sticker)).length;
   const getLicenseExpired = (data) =>
     data.filter((item) => isExpired(item.licenseExpireDate)).length;
+
+  const [vehicle, setVehicle] = useState([]);
+
   useEffect(() => {
     fetchEnrollments();
   }, []);
@@ -249,7 +252,7 @@ export default function Home() {
           {[
             {
               name: "CAR",
-              value: 42,
+              value: "40",
               icon: <FaCar />,
             },
             {

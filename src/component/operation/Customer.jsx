@@ -241,7 +241,7 @@ export default function Customer() {
                         />
                       </td>
                       <td
-                        className="px-3 py-2 cursor-pointer"
+                        className="px-3 py-2 cursor-pointer hover:text-green-500 hover:underline"
                         onClick={() => showDetails(item._id)}
                       >
                         {item.pno}

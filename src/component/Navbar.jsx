@@ -39,7 +39,7 @@ export default function Navbar() {
         { access: "Setup.Rank", label: "Rank", path: "/rank" },
         {
           access: "Setup.VehicleBrand",
-          label: "Vehicle Brand",
+          label: "Vehicle Type",
           path: "/vehicle-brand",
         },
         {
@@ -118,7 +118,7 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="bg-emerald-600 text-white px-4 py-1 relative z-30">
+    <nav className="bg-emerald-600 text-white px-4 py-1 relative z-50">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="w-20 h-10 flex items-center">
