@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-// import QRCode from "react-qr-code";
 import { useLocation } from "react-router-dom";
 import api from "../../../utils/api";
 import QRImage from "./QRImage";
@@ -18,8 +17,6 @@ const AutoQRCode = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-
-        // backend expects comma-separated IDs
         const res = await api.get(`/enrollment/${ids.join(",")}`);
         setEnrollments(res.data);
       } catch (error) {
@@ -35,31 +32,14 @@ const AutoQRCode = () => {
   if (ids.length === 0) return <p>No IDs provided</p>;
 
   return (
-    <div style={{ textAlign: "center", marginTop: "20px" }}>
+    <div className="qr-wrapper">
       {loading ? (
-        <div>
+        <div className="loading-container">
           <p>Generating QR Codes...</p>
-          <div
-            style={{
-              width: "50px",
-              height: "50px",
-              margin: "auto",
-              border: "5px solid #f3f3f3",
-              borderTop: "5px solid #555",
-              borderRadius: "50%",
-              animation: "spin 1s linear infinite",
-            }}
-          />
+          <div className="loader" />
         </div>
       ) : (
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-            gap: "20px",
-            justifyItems: "center",
-          }}
-        >
+        <div className="qr-grid">
           {enrollments.map((item, index) => {
             const formattedString = `
 Serial:${item.pno || ""}
@@ -72,55 +52,24 @@ Fitness:${formatDate(item.fitness)}
 Validity:${formatDate(item.validity)}
 Mobile:${item.primaryMobile || item.alternativeMobile || ""}
 `.trim();
-            // const url = `https://navy-ruddy.vercel.app/show-data/${item._id}`;
+
             const url = formattedString;
 
             return (
-              <div
-                key={item._id}
-                style={{
-                  border: "2px solid black",
-                  width: "280px",
-                  fontFamily: "Arial",
-                }}
-              >
+              <div key={item._id} className="qr-card w-full">
                 {/* Top Section */}
-                <div style={{ display: "flex" }}>
-                  {/* QR Code */}
-                  <div
-                    style={{
-                      flex: 1,
-                      borderRight: "2px solid black",
-                      padding: "0px",
-                    }}
-                  >
+                <div className="qr-top">
+                  <div className="qr-image">
                     <QRImage value={url} />
                   </div>
 
-                  {/* Serial Number */}
-                  <div
-                    style={{
-                      width: "50%",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontWeight: "bold",
-                      fontSize: "13px",
-                    }}
-                  >
+                  <div className="qr-serial">
                     {String(index + 1).padStart(4, "0")}/25
                   </div>
                 </div>
 
                 {/* Bottom Section */}
-                <div
-                  style={{
-                    borderTop: "2px solid black",
-                    padding: "4px",
-                    fontSize: "10px",
-                    textAlign: "left",
-                  }}
-                >
+                <div className="qr-bottom">
                   <div>
                     <strong>REG NO:</strong> {item.registrationNo}
                   </div>
@@ -134,51 +83,141 @@ Mobile:${item.primaryMobile || item.alternativeMobile || ""}
               </div>
             );
           })}
-
-          {/* {enrollments.map((item) => {
-            const url = `https://navy-ruddy.vercel.app/show-data/${item._id}`;
-            // const url = `http://localhost:5173/show-data/${item._id}`;
-
-            return (
-              <div key={item._id} style={{ textAlign: "center" }}>
-                <QRImage value={url} />
-                <div style={{ marginTop: "10px", lineHeight: "1.4" }}>
-                  <p style={{ fontSize: "16px", fontWeight: "600", margin: 0 }}>
-                    {item.fullName}
-                  </p>
-
-                  <p
-                    style={{ fontSize: "14px", color: "#555", margin: "2px 0" }}
-                  >
-                    {item.officialRank}
-                  </p>
-
-                  <p style={{ fontSize: "14px", color: "#000", margin: 0 }}>
-                    📞 {item.primaryMobile}
-                  </p>
-                </div>
-              </div>
-            );
-          })} */}
         </div>
       )}
 
+      {/* Print Button */}
+      <div className="print:hidden print-button">
+        <button onClick={() => window.print()}>Print / Save as PDF</button>
+      </div>
+
+      {/* Styles */}
       <style>
         {`
+          body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+          }
+
+          .qr-wrapper {
+            padding: 20px;
+            text-align: center;
+          }
+
+          /* Loading */
+          .loading-container {
+            margin-top: 40px;
+          }
+
+          .loader {
+            width: 50px;
+            height: 50px;
+            margin: auto;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #555;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+          }
+
           @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
           }
+
+          /* SCREEN Layout */
+          .qr-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 5px;
+            justify-items: center;
+          }
+
+          .qr-card {
+            border: 1px solid black;
+            width: 100%;
+            max-width: 220px;
+            font-size: 9px;
+          }
+
+          .qr-top {
+            display: flex;
+          }
+
+          .qr-image {
+            flex: 1;
+            border-right: 1px solid black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+
+          .qr-serial {
+            width: 55%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 10px;
+          }
+
+          .qr-bottom {
+            border-top: 1px solid black;
+            padding: 4px;
+            text-align: left;
+          }
+
+          .print-button {
+            margin-top: 2px;
+          }
+
+          .print-button button {
+            padding: 10px 20px;
+            border: 1px solid black;
+            background: white;
+            font-weight: 600;
+            cursor: pointer;
+          }
+
+          .print-button button:hover {
+            background: black;
+            color: white;
+          }
+
+          /* PRINT Layout */
+          @media print {
+            body {
+              margin: 0;
+            }
+
+            .print\\:hidden {
+              display: none !important;
+            }
+
+            .qr-wrapper {
+              padding: 5px;
+            }
+
+            .qr-grid {
+              display: grid;
+              grid-template-columns: repeat(4, 1fr);
+              gap: 10px;
+              width: 100%;
+            }
+
+            .qr-card {
+              width: 100%;
+              height: 33mm;   /* 8 rows per page */
+              max-width: none;
+              page-break-inside: avoid;
+            }
+
+            @page {
+              size: A4 portrait;
+              margin: 10mm;
+            }
+          }
         `}
       </style>
-      <div className="text-center mt-6 print:hidden">
-        <button
-          onClick={() => window.print()}
-          className="px-6 py-2 border border-black font-semibold hover:bg-black hover:text-white transition"
-        >
-          Print / Save as PDF
-        </button>
-      </div>
     </div>
   );
 };

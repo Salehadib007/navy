@@ -66,6 +66,11 @@ export default function Navbar() {
         {
           access: "Setup.VehicleModel",
           label: "Vehicle Type",
+          path: "/vehicle-type",
+        },
+        {
+          access: "Setup.VehicleType",
+          label: "Vehicle Model",
           path: "/vehicle-model",
         },
         { access: "Setup.Employee", label: "Employee", path: "/employee" },

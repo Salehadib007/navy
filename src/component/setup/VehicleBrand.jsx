@@ -149,7 +149,7 @@ const VehicleBrand = () => {
 
   return (
     <div className="min-h-screen p-8 bg-gray-50">
-      <div className="max-w-5xl mx-auto bg-white p-6 rounded shadow">
+      <div className="w-full mx-auto bg-white p-6 rounded shadow">
         <h1 className="text-2xl font-bold mb-6">Vehicle Brand Setup</h1>
 
         {/* ================= FORM ================= */}

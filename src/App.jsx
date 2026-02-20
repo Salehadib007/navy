@@ -34,6 +34,7 @@ import EnrollmentDetails from "./component/operation/EnrollmentDetails";
 import AddRegistrationOptions from "./component/setup/AddRegistrationOptions";
 import VehicleTable from "./component/setup/VehicleTable";
 import VehicleDetails from "./component/setup/VehicleDetails";
+import VehicleType from "./component/setup/VehicleType";
 
 const App = () => {
   const { auth } = useAuth();
@@ -95,6 +96,14 @@ const App = () => {
         {
           path: "blood-group",
           element: can("Setup.BloodGroup") && <BloodGroup />,
+        },
+        {
+          path: "vehicle-model",
+          element: <VehicleModel />,
+        },
+        {
+          path: "vehicle-type",
+          element: <VehicleType />,
         },
         {
           path: "vehicle-model",

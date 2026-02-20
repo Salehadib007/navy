@@ -186,7 +186,7 @@ export default function Customer() {
     //       </div>
     //       <Link
     //         to="/customerEntry"
-    //         className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm"
+    //         className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-xs"
     //       >
     //         + Add Customer
     //       </Link>
@@ -198,7 +198,7 @@ export default function Customer() {
     //       <>
     //         {/* Table */}
     //         <div className="overflow-x-auto border rounded-lg">
-    //           <table className="min-w-[1100px] w-full text-sm">
+    //           <table className="min-w-[1100px] w-full text-xs">
     //             <thead className="bg-gray-800 text-white">
     //               <tr>
     //                 <th className="px-3 py-2">
@@ -272,7 +272,7 @@ export default function Customer() {
     //         </div>
 
     //         {/* Pagination */}
-    //         <div className="flex justify-between items-center mt-4 text-sm">
+    //         <div className="flex justify-between items-center mt-4 text-xs">
     //           <p className="text-gray-600">
     //             Showing {startIndex + 1} to{" "}
     //             {Math.min(startIndex + itemsPerPage, customers.length)} of{" "}
@@ -315,11 +315,11 @@ export default function Customer() {
     // edited
 
     <div className="min-h-screen min-w-full bg-gradient-to-br from-slate-100 to-slate-200 p-6">
-      <div className="max-w-7xl mx-auto bg-white rounded-2xl shadow-xl border border-gray-200">
+      <div className="w-full mx-auto bg-white rounded-2xl shadow-xl border border-gray-200">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-6 border-b bg-white rounded-t-2xl">
           <div className="flex items-center gap-4">
-            <h2 className="text-2xl font-bold text-gray-800 tracking-tight">
+            <h2 className="text-xl font-bold text-gray-800 tracking-tight">
               Enrollment Entry
             </h2>
 
@@ -333,7 +333,7 @@ export default function Customer() {
 
           <Link
             to="/customerEntry"
-            className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl text-sm font-medium shadow-md transition duration-200"
+            className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl text-xs font-medium shadow-md transition duration-200"
           >
             + Add
           </Link>
@@ -347,9 +347,9 @@ export default function Customer() {
           <>
             {/* Table */}
             <div className="overflow-x-auto">
-              <table className="min-w-[1100px] w-full text-sm">
+              <table className="min-w-[1100px] w-full text-xs">
                 <thead>
-                  <tr className="bg-slate-800 text-white text-sm uppercase tracking-wider">
+                  <tr className="bg-slate-800 text-white text-xs uppercase tracking-wider">
                     <th className="px-4 py-3 text-center">
                       <input
                         type="checkbox"
@@ -454,7 +454,7 @@ export default function Customer() {
 
             {/* Pagination */}
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-6 border-t bg-gray-50 rounded-b-2xl">
-              <p className="text-gray-600 text-sm">
+              <p className="text-gray-600 text-xs">
                 Showing <span className="font-semibold">{startIndex + 1}</span>{" "}
                 to{" "}
                 <span className="font-semibold">

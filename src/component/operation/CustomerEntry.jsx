@@ -17,7 +17,6 @@ export default function CustomerEntry() {
     year: "",
   });
 
-  // Flatten arrays from RegistrationContext
   const locationOptions = registrations.flatMap((r) => r.location || []);
   const unitOptions = registrations.flatMap((r) => r.unit || []);
 
@@ -114,7 +113,6 @@ export default function CustomerEntry() {
       await api.post("/enrollment", enrollment);
       alert("Enrollment saved successfully!");
 
-      // reset
       setEnrollment({
         pno: "",
         officialRank: "",
@@ -235,6 +233,7 @@ export default function CustomerEntry() {
                 value={enrollment.email}
                 onChange={handleChange}
               />
+
               <Textarea
                 label="Permanent Address"
                 className="md:col-span-2"
@@ -242,8 +241,11 @@ export default function CustomerEntry() {
                 value={enrollment.permanentAddress}
                 onChange={handleChange}
               />
+
+              {/* Profile Image */}
               <Upload
                 label="Profile Image"
+                value={enrollment.profileImage}
                 onUpload={(file) => handleImageUpload("profileImage", file)}
               />
             </div>
@@ -269,6 +271,13 @@ export default function CustomerEntry() {
                 onChange={handleChange}
                 options={setup?.VehicleBrand?.map((v) => v.split(".")[1]) || []}
               />
+              <Select
+                label="* Vehicle Model"
+                name="vehicleModel"
+                value={enrollment.vehicleModel}
+                onChange={handleChange}
+                options={setup?.VehicleModel?.map((v) => v) || []}
+              />
 
               {/* Registration Info */}
               <div className="border rounded-xl p-4 space-y-4 bg-gray-50 md:col-span-3">
@@ -277,7 +286,6 @@ export default function CustomerEntry() {
                 </h3>
                 <div className="grid md:grid-cols-4 gap-4">
                   <Select
-                    label="Location"
                     value={registrationParts.location}
                     onChange={(e) =>
                       handleRegistrationChange("location", e.target.value)
@@ -285,7 +293,6 @@ export default function CustomerEntry() {
                     options={locationOptions}
                   />
                   <Select
-                    label="Unit"
                     value={registrationParts.unit}
                     onChange={(e) =>
                       handleRegistrationChange("unit", e.target.value)
@@ -293,7 +300,6 @@ export default function CustomerEntry() {
                     options={unitOptions}
                   />
                   <Input
-                    label="Serial"
                     value={registrationParts.serial}
                     onChange={(e) =>
                       handleRegistrationChange(
@@ -303,21 +309,23 @@ export default function CustomerEntry() {
                     }
                   />
                   <Input
-                    label="Year"
                     value={registrationParts.year}
                     onChange={(e) =>
                       handleRegistrationChange("year", e.target.value)
                     }
                   />
                 </div>
+
                 <Input
                   label="Sticker"
                   name="sticker"
                   value={enrollment.sticker}
                   onChange={handleChange}
                 />
+
                 <Upload
                   label="Sticker Image"
+                  value={enrollment.stickerImage}
                   onUpload={(file) => handleImageUpload("stickerImage", file)}
                 />
               </div>
@@ -362,8 +370,10 @@ export default function CustomerEntry() {
                 value={enrollment.taxToken}
                 onChange={handleChange}
               />
+
               <Upload
                 label="Tax Token Image"
+                value={enrollment.taxTokenImage}
                 onUpload={(file) => handleImageUpload("taxTokenImage", file)}
               />
             </div>
@@ -407,26 +417,33 @@ export default function CustomerEntry() {
                 value={enrollment.driverNidNo}
                 onChange={handleChange}
               />
+
               <Upload
                 label="Driver NID Image"
+                value={enrollment.driverNidImage}
                 onUpload={(file) => handleImageUpload("driverNidImage", file)}
               />
+
               <Input
                 label="* Full Name"
                 name="driverName"
                 value={enrollment.driverName}
                 onChange={handleChange}
               />
+
               <Upload
                 label="Driver Image"
+                value={enrollment.driverImage}
                 onUpload={(file) => handleImageUpload("driverImage", file)}
               />
+
               <Input
                 label="* Driving License No"
                 name="drivingLicenseNo"
                 value={enrollment.drivingLicenseNo}
                 onChange={handleChange}
               />
+
               <Input
                 type="date"
                 label="* License Expire Date"
@@ -536,11 +553,24 @@ function Textarea({ label, className = "", name, value, onChange }) {
   );
 }
 
-function Upload({ label, onUpload }) {
+/* ================= UPLOAD COMPONENT WITH PREVIEW ================= */
+function Upload({ label, onUpload, value }) {
+  const [preview, setPreview] = useState("");
+
+  useEffect(() => {
+    if (value) setPreview(value);
+  }, [value]);
+
   const handleChange = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    const objectUrl = URL.createObjectURL(file);
+    setPreview(objectUrl);
+
     onUpload(file);
+
+    return () => URL.revokeObjectURL(objectUrl);
   };
 
   return (
@@ -548,7 +578,16 @@ function Upload({ label, onUpload }) {
       {label && (
         <label className="block text-sm font-medium mb-1">{label}</label>
       )}
+
       <input type="file" onChange={handleChange} className="w-full text-sm" />
+
+      {preview && (
+        <img
+          src={preview}
+          alt="preview"
+          className="mt-2 w-24 h-24 object-cover rounded border"
+        />
+      )}
     </div>
   );
 }

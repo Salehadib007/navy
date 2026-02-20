@@ -176,7 +176,7 @@ export default function SetupItem({
   // ===============================
   return (
     <div className="min-h-screen bg-slate-100 p-4">
-      <div className="max-w-6xl mx-auto bg-white rounded-xl shadow">
+      <div className="w-full mx-auto bg-white rounded-xl shadow">
         {/* Header */}
         <div className="p-4 border-b flex justify-between items-center gap-3">
           <h2 className="text-lg font-semibold">{title}</h2>
