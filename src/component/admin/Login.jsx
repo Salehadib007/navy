@@ -46,7 +46,7 @@ export default function Login() {
       className="min-h-screen flex items-center justify-center bg-cover bg-center relative"
       style={{
         backgroundImage:
-          "url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d')",
+          "url('https://joinnavy.navy.mil.bd/images/gallery/gallery-img-17.png')",
       }}
     >
       <div className="absolute inset-0 bg-white/70"></div>
@@ -55,7 +55,7 @@ export default function Login() {
         <div className="flex flex-col items-center mb-6">
           <div className="w-20 h-20 mb-3">
             <img
-              src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Anchor.svg/1200px-Anchor.svg.png"
+              src="navylogo.png"
               alt="Logo"
               className="w-full h-full object-contain"
             />

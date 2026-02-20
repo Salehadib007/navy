@@ -1,5 +1,6 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
+import { formatDate } from "../../../utils/formatDate";
 
 const EnrollmentDetails = () => {
   const location = useLocation();
@@ -63,10 +64,10 @@ const EnrollmentDetails = () => {
           <Info label="Issue Date" value={enrollment.issueDate} />
           <Info label="Chassis Number" value={enrollment.chassisNumber} />
           <Info label="Engine Number" value={enrollment.engineNumber} />
-          <Info label="Validity" value={enrollment.validity} />
-          <Info label="Fitness" value={enrollment.fitness} />
-          <Info label="Sticker" value={enrollment.sticker} />
-          <Info label="Tax Token" value={enrollment.taxToken} />
+          <Info label="Validity" value={formatDate(enrollment.validity)} />
+          <Info label="Fitness" value={formatDate(enrollment.fitness)} />
+          <Info label="Sticker" value={formatDate(enrollment.sticker)} />
+          <Info label="Tax Token" value={formatDate(enrollment.taxToken)} />
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-10">
             <ImageCard title="Tax Token" src={enrollment.taxTokenImage} />

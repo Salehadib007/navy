@@ -39,7 +39,7 @@ export default function Navbar() {
         { access: "Setup.Rank", label: "Rank", path: "/rank" },
         {
           access: "Setup.VehicleBrand",
-          label: "Vehicle Type",
+          label: "Vehicle Brand",
           path: "/vehicle-brand",
         },
         {
@@ -65,7 +65,7 @@ export default function Navbar() {
         },
         {
           access: "Setup.VehicleModel",
-          label: "Vehicle Model",
+          label: "Vehicle Type",
           path: "/vehicle-model",
         },
         { access: "Setup.Employee", label: "Employee", path: "/employee" },
@@ -79,6 +79,11 @@ export default function Navbar() {
           label: "Designation",
           path: "/designation",
         },
+        {
+          access: "Enrollment",
+          label: "Add Registration",
+          path: "/add-registration",
+        },
       ],
     },
     {
@@ -90,7 +95,7 @@ export default function Navbar() {
       name: "REPORT",
       icon: <HiOutlineDocumentReport />,
       sub: [
-        { access: "CreateUser", label: "Create User", path: "/create-user" },
+        // { access: "CreateUser", label: "Create User", path: "/create-user" },
         {
           access: "Setup.Branch",
           label: "Enrollment List",
@@ -111,9 +116,9 @@ export default function Navbar() {
       ],
     },
     {
-      name: `${auth?.user?.username}`,
+      name: `${auth?.user?.username ? "Logout" : "login"}`,
       icon: <MdSupervisorAccount />,
-      sub: [{ label: "Logout", path: "/login" }],
+      sub: auth?.user?.username && [{ label: "Logout", path: "/login" }],
     },
   ];
 
@@ -151,8 +156,7 @@ export default function Navbar() {
               {/* Desktop Submenu */}
               {item.sub && (
                 <ul
-                  className="absolute left-0 top-full mt-1 w-56
-                  bg-white text-gray-700 rounded-md shadow-lg
+                  className="absolute left-0 top-full mt-1 w-48                  bg-white text-gray-700 rounded-md shadow-lg
                   opacity-0 invisible group-hover:opacity-100
                   group-hover:visible transition-all duration-300"
                 >

@@ -9,7 +9,7 @@ export default function SetupItem({
   title = "Setup",
   placeholder = "Name",
 }) {
-  const { setup, loadingSetup, fetchSetup } = useSetup();
+  const { setup, setSetup, loadingSetup, fetchSetup } = useSetup();
 
   // ===============================
   // Data from SetupContext
@@ -96,11 +96,16 @@ export default function SetupItem({
 
     try {
       await api.post("/setup/add", { key: setupKey, value });
+
+      // 🔥 Optimistic update
+      setSetup((prev) => ({
+        ...prev,
+        [setupKey]: [...(prev[setupKey] || []), value],
+      }));
+
       setNewValue("");
       setIsAddOpen(false);
-      await fetchSetup();
     } catch (err) {
-      // console.log("Add error:", err);
       alert(err.response?.data?.message || "Failed to add item");
     }
   };
@@ -128,10 +133,16 @@ export default function SetupItem({
         value: newVal,
       });
 
+      // 🔥 Optimistic replace
+      setSetup((prev) => ({
+        ...prev,
+        [setupKey]: prev[setupKey].map((item) =>
+          item === editingRow.name ? newVal : item,
+        ),
+      }));
+
       setIsUpdateOpen(false);
-      await fetchSetup();
     } catch (err) {
-      // console.log("Update error:", err);
       alert(err.response?.data?.message || "Failed to update item");
     }
   };
@@ -148,10 +159,14 @@ export default function SetupItem({
         value: deletingRow.name,
       });
 
+      // 🔥 Optimistic remove
+      setSetup((prev) => ({
+        ...prev,
+        [setupKey]: prev[setupKey].filter((item) => item !== deletingRow.name),
+      }));
+
       setIsDeleteOpen(false);
-      await fetchSetup();
     } catch (err) {
-      // console.log("Delete error:", err);
       alert(err.response?.data?.message || "Failed to delete item");
     }
   };

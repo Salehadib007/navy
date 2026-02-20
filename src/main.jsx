@@ -26,6 +26,9 @@ import App from "./App";
 // import "./index.css";
 import { SetupProvider } from "../context/SetupContext";
 import { AuthProvider } from "../context/AuthContext";
+import { VehicleProvider } from "../context/VehicleContext";
+import { AddVehicleProvider } from "../context/AddVehicleContext";
+import { RegistrationProvider } from "../context/RegistrationContext";
 // import PrivateRoute from "./PrivateRoute";
 // import Users from "./component/admin/Users";
 
@@ -120,7 +123,13 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AuthProvider>
       <SetupProvider>
-        <App />
+        <VehicleProvider>
+          <AddVehicleProvider>
+            <RegistrationProvider>
+              <App />
+            </RegistrationProvider>
+          </AddVehicleProvider>
+        </VehicleProvider>
       </SetupProvider>
     </AuthProvider>
   </StrictMode>,

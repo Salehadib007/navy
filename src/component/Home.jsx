@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { act, useEffect, useState } from "react";
 import {
   FaCar,
   FaCheckCircle,
@@ -12,50 +12,61 @@ import { HiOutlineIdentification } from "react-icons/hi";
 import { MdOutlineCreditCardOff, MdOutlinePayments } from "react-icons/md";
 import api from "../../utils/api.js";
 import { getAuth, setAuth } from "../../utils/auth";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
+import { useVehicle } from "../../context/VehicleContext.jsx";
+import { useSetup } from "../../context/SetupContext.jsx";
 
 export default function Home() {
   const [enrollments, setEnrollments] = useState([]);
+
+  const { vehicles } = useVehicle();
+  const navigate = useNavigate();
+  // const data = enrollments;
+
+  const { setup } = useSetup();
+
+  const typeCar = setup?.VehicleBrand?.map((item) => item.split(".")[0]);
+
   const [stats, setStats] = useState([
     {
       title: "Total Vehicle",
-      value: 678,
+      value: "No Data",
       icon: <FaCar />,
       color: "bg-blue-100 text-blue-700 hover:bg-blue-200",
     },
     {
       title: "Active",
-      value: 655,
+      value: "No Data",
       icon: <FaCheckCircle />,
       color: "bg-green-100 text-green-700 hover:bg-green-200",
     },
     {
       title: "Inactive",
-      value: 23,
+      value: "No Data",
       icon: <FaTimesCircle />,
       color: "bg-pink-100 text-pink-700 hover:bg-pink-200",
     },
     {
       title: "Tax Token Expired",
-      value: 146,
+      value: "No Data",
       icon: <MdOutlinePayments />,
       color: "bg-orange-100 text-orange-700 hover:bg-orange-200",
     },
     {
       title: "Fitness Expired",
-      value: 6,
+      value: "No Data",
       icon: <GiWeightLiftingUp />,
       color: "bg-indigo-100 text-indigo-700 hover:bg-indigo-200",
     },
     {
       title: "Sticker Expired",
-      value: 0,
+      value: "No Data",
       icon: <HiOutlineIdentification />,
       color: "bg-fuchsia-100 text-fuchsia-700 hover:bg-fuchsia-200",
     },
     {
       title: "Driving Licence Expired",
-      value: 43,
+      value: "No Data",
       icon: <MdOutlineCreditCardOff />,
       color: "bg-purple-100 text-purple-700 hover:bg-purple-200",
     },
@@ -65,7 +76,6 @@ export default function Home() {
     try {
       const res = await api.get("/enrollment");
       // const data = await res.json();
-      console.log(res.data);
 
       setEnrollments(res.data);
     } catch (error) {
@@ -77,7 +87,8 @@ export default function Home() {
     return new Date(date) < new Date();
   };
 
-  const getTotalVehicles = (data) => data.length;
+  const getTotalVehicles = (data) => data;
+
   const getActiveVehicles = (data) =>
     data.filter(
       (item) =>
@@ -85,7 +96,7 @@ export default function Home() {
         !isExpired(item.fitness) &&
         !isExpired(item.sticker) &&
         !isExpired(item.licenseExpireDate),
-    ).length;
+    );
 
   const getInactiveVehicles = (data) =>
     data.filter(
@@ -94,15 +105,23 @@ export default function Home() {
         isExpired(item.fitness) ||
         isExpired(item.sticker) ||
         isExpired(item.licenseExpireDate),
-    ).length;
+    );
   const getTaxTokenExpired = (data) =>
-    data.filter((item) => isExpired(item.taxToken)).length;
+    data.filter((item) => isExpired(item.taxToken));
   const getFitnessExpired = (data) =>
-    data.filter((item) => isExpired(item.fitness)).length;
+    data.filter((item) => isExpired(item.fitness));
   const getStickerExpired = (data) =>
-    data.filter((item) => isExpired(item.sticker)).length;
+    data.filter((item) => isExpired(item.sticker));
   const getLicenseExpired = (data) =>
-    data.filter((item) => isExpired(item.licenseExpireDate)).length;
+    data.filter((item) => isExpired(item.licenseExpireDate));
+
+  const totalV = getTotalVehicles(enrollments);
+  const activeV = getActiveVehicles(enrollments);
+  const inactiveV = getInactiveVehicles(enrollments);
+  const taxV = getTaxTokenExpired(enrollments);
+  const fitnessV = getFitnessExpired(enrollments);
+  const stickerV = getStickerExpired(enrollments);
+  const licenseV = getLicenseExpired(enrollments);
 
   const [vehicle, setVehicle] = useState([]);
 
@@ -110,16 +129,21 @@ export default function Home() {
     fetchEnrollments();
   }, []);
 
+  const tableShow = (items) => {
+    console.log(items);
+
+    navigate("/vehicle-table", { state: items });
+  };
   useEffect(() => {
     if (enrollments.length === 0) return;
 
-    const total = getTotalVehicles(enrollments);
-    const active = getActiveVehicles(enrollments);
-    const inactive = getInactiveVehicles(enrollments);
-    const taxExpired = getTaxTokenExpired(enrollments);
-    const fitnessExpired = getFitnessExpired(enrollments);
-    const stickerExpired = getStickerExpired(enrollments);
-    const licenseExpired = getLicenseExpired(enrollments);
+    const total = getTotalVehicles(enrollments).length;
+    const active = getActiveVehicles(enrollments).length;
+    const inactive = getInactiveVehicles(enrollments).length;
+    const taxExpired = getTaxTokenExpired(enrollments).length;
+    const fitnessExpired = getFitnessExpired(enrollments).length;
+    const stickerExpired = getStickerExpired(enrollments).length;
+    const licenseExpired = getLicenseExpired(enrollments).length;
 
     setStats([
       {
@@ -127,42 +151,49 @@ export default function Home() {
         value: total,
         icon: <FaCar />,
         color: "bg-blue-100 text-blue-700 hover:bg-blue-200",
+        data: totalV,
       },
       {
         title: "Active",
         value: active,
         icon: <FaCheckCircle />,
         color: "bg-green-100 text-green-700 hover:bg-green-200",
+        data: activeV,
       },
       {
         title: "Inactive",
         value: inactive,
         icon: <FaTimesCircle />,
         color: "bg-pink-100 text-pink-700 hover:bg-pink-200",
+        data: inactiveV,
       },
       {
         title: "Tax Token Expired",
         value: taxExpired,
         icon: <MdOutlinePayments />,
         color: "bg-orange-100 text-orange-700 hover:bg-orange-200",
+        data: taxV,
       },
       {
         title: "Fitness Expired",
         value: fitnessExpired,
         icon: <GiWeightLiftingUp />,
         color: "bg-indigo-100 text-indigo-700 hover:bg-indigo-200",
+        data: fitnessV,
       },
       {
         title: "Sticker Expired",
         value: stickerExpired,
         icon: <HiOutlineIdentification />,
         color: "bg-fuchsia-100 text-fuchsia-700 hover:bg-fuchsia-200",
+        data: stickerV,
       },
       {
         title: "Driving Licence Expired",
         value: licenseExpired,
         icon: <MdOutlineCreditCardOff />,
         color: "bg-purple-100 text-purple-700 hover:bg-purple-200",
+        data: licenseV,
       },
     ]);
   }, [enrollments]);
@@ -229,6 +260,7 @@ export default function Home() {
               transform transition-all duration-300 ease-in-out
               hover:scale-[1.03] hover:shadow-md
               ${item.color}`}
+            onClick={() => tableShow(item.data)}
           >
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium">{item.title}</span>
@@ -251,23 +283,23 @@ export default function Home() {
         <div className="bg-slate-800 rounded-md grid grid-cols-2 md:grid-cols-4 text-center text-white overflow-hidden">
           {[
             {
-              name: "CAR",
-              value: "40",
+              name: `Car`,
+              value: `${typeCar.filter((item) => item.toLowerCase() === "car").length}`,
               icon: <FaCar />,
             },
             {
-              name: "PICKUP",
-              value: 0,
+              name: `Pickup`,
+              value: `${typeCar.filter((item) => item.toLowerCase() === "pickup").length}`,
               icon: <FaTruckPickup />,
             },
             {
-              name: "MOTORCYCLE",
-              value: 631,
+              name: `Motorcycle`,
+              value: `${typeCar.filter((item) => item.toLowerCase() === "motorcycle").length}`,
               icon: <FaMotorcycle />,
             },
             {
-              name: "MICROBUS",
-              value: 2,
+              name: `Bus`,
+              value: `${typeCar.filter((item) => item.toLowerCase() === "microbus").length}`,
               icon: <FaBus />,
             },
           ].map((item, index) => (

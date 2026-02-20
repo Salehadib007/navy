@@ -164,44 +164,193 @@ export default function Customer() {
   // UI
   // ===============================
   return (
-    <div className="min-h-screen bg-gray-100 p-4">
-      <div className="max-w-7xl mx-auto bg-white rounded-xl shadow p-4">
+    // <div className="min-h-screen bg-gray-100 p-4">
+    //   <div className="max-w-7xl mx-auto bg-white rounded-xl shadow p-4">
+    //     {/* Header */}
+    //     <div className="flex justify-between items-center mb-4">
+    //       <div className="flex items-center gap-3">
+    //         <h2 className="text-lg font-semibold text-gray-700">
+    //           Customer Entry
+    //         </h2>
+    //         <div className="bg-red-500 rounded-full w-8 h-8 flex cursor-pointer items-center justify-center">
+    //           <PrinterIcon onClick={generateQr} color="white">
+    //             {/* <button
+    //               disabled={selectedIds.length === 0}
+    //               onClick={generateQr}
+    //               className="bg-indigo-600 text-white px-4 py-2 rounded disabled:opacity-50"
+    //             >
+    //               Generate QR ({selectedIds.length})
+    //             </button> */}
+    //           </PrinterIcon>
+    //         </div>
+    //       </div>
+    //       <Link
+    //         to="/customerEntry"
+    //         className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm"
+    //       >
+    //         + Add Customer
+    //       </Link>
+    //     </div>
+
+    //     {loading ? (
+    //       <p>Loading...</p>
+    //     ) : (
+    //       <>
+    //         {/* Table */}
+    //         <div className="overflow-x-auto border rounded-lg">
+    //           <table className="min-w-[1100px] w-full text-sm">
+    //             <thead className="bg-gray-800 text-white">
+    //               <tr>
+    //                 <th className="px-3 py-2">
+    //                   <input
+    //                     type="checkbox"
+    //                     checked={
+    //                       currentData.length > 0 &&
+    //                       selectedIds.length === currentData.length
+    //                     }
+    //                     onChange={toggleSelectAll}
+    //                   />
+    //                 </th>
+    //                 <th className="px-3 py-2">#</th>
+    //                 <th className="px-3 py-2">Profile</th>
+    //                 <th className="px-3 py-2">PNO</th>
+    //                 <th className="px-3 py-2">Full Name</th>
+    //                 <th className="px-3 py-2">Mobile</th>
+    //                 <th className="px-3 py-2">NID</th>
+    //                 <th className="px-3 py-2">Category</th>
+    //                 <th className="px-3 py-2">Entry By</th>
+    //                 <th className="px-3 py-2">Operation</th>
+    //               </tr>
+    //             </thead>
+    //             <tbody>
+    //               {currentData.map((item, idx) => (
+    //                 <tr key={item._id} className="border-b hover:bg-gray-50">
+    //                   <td className="px-3 py-2">
+    //                     <input
+    //                       type="checkbox"
+    //                       checked={selectedIds.includes(item._id)}
+    //                       onChange={() => toggleSelect(item._id)}
+    //                     />
+    //                   </td>
+    //                   <td className="px-3 py-2">{startIndex + idx + 1}</td>
+    //                   <td className="px-3 py-2">
+    //                     <img
+    //                       src={item.profileImage || "https://i.pravatar.cc/100"}
+    //                       alt="profile"
+    //                       className="w-10 h-10 rounded-full border"
+    //                     />
+    //                   </td>
+    //                   <td
+    //                     className="px-3 py-2 cursor-pointer hover:text-green-500 hover:underline"
+    //                     onClick={() => showDetails(item._id)}
+    //                   >
+    //                     {item.pno}
+    //                   </td>
+    //                   <td className="px-3 py-2">{item.fullName}</td>
+    //                   <td className="px-3 py-2">{item.primaryMobile}</td>
+    //                   <td className="px-3 py-2">{item.brNoOrNid}</td>
+    //                   <td className="px-3 py-2">{item.userCategory}</td>
+    //                   <td className="px-3 py-2">{item.entryBy || "system"}</td>
+    //                   <td className="px-3 py-2 flex gap-2 justify-center">
+    //                     <button
+    //                       onClick={() => openEditModal(item)}
+    //                       className="bg-cyan-500 hover:bg-cyan-600 text-white px-2 py-1 rounded text-xs"
+    //                     >
+    //                       Edit
+    //                     </button>
+    //                     <button
+    //                       onClick={() => handleDelete(item._id)}
+    //                       className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-xs"
+    //                     >
+    //                       Delete
+    //                     </button>
+    //                   </td>
+    //                 </tr>
+    //               ))}
+    //             </tbody>
+    //           </table>
+    //         </div>
+
+    //         {/* Pagination */}
+    //         <div className="flex justify-between items-center mt-4 text-sm">
+    //           <p className="text-gray-600">
+    //             Showing {startIndex + 1} to{" "}
+    //             {Math.min(startIndex + itemsPerPage, customers.length)} of{" "}
+    //             {customers.length}
+    //           </p>
+    //           <div className="flex gap-1">
+    //             <button
+    //               disabled={page === 1}
+    //               onClick={() => setPage(page - 1)}
+    //               className="px-3 py-1 border rounded disabled:opacity-50"
+    //             >
+    //               Previous
+    //             </button>
+    //             {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+    //               (p) => (
+    //                 <button
+    //                   key={p}
+    //                   onClick={() => setPage(p)}
+    //                   className={`px-3 py-1 border rounded ${
+    //                     page === p ? "bg-blue-500 text-white" : ""
+    //                   }`}
+    //                 >
+    //                   {p}
+    //                 </button>
+    //               ),
+    //             )}
+    //             <button
+    //               disabled={page === totalPages}
+    //               onClick={() => setPage(page + 1)}
+    //               className="px-3 py-1 border rounded disabled:opacity-50"
+    //             >
+    //               Next
+    //             </button>
+    //           </div>
+    //         </div>
+    //       </>
+    //     )}
+    //   </div>
+
+    // edited
+
+    <div className="min-h-screen min-w-full bg-gradient-to-br from-slate-100 to-slate-200 p-6">
+      <div className="max-w-7xl mx-auto bg-white rounded-2xl shadow-xl border border-gray-200">
         {/* Header */}
-        <div className="flex justify-between items-center mb-4">
-          <div className="flex items-center gap-3">
-            <h2 className="text-lg font-semibold text-gray-700">
-              Customer Entry
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-6 border-b bg-white rounded-t-2xl">
+          <div className="flex items-center gap-4">
+            <h2 className="text-2xl font-bold text-gray-800 tracking-tight">
+              Enrollment Entry
             </h2>
-            <div className="bg-red-500 rounded-full w-8 h-8 flex cursor-pointer items-center justify-center">
-              <PrinterIcon onClick={generateQr} color="white">
-                {/* <button
-                  disabled={selectedIds.length === 0}
-                  onClick={generateQr}
-                  className="bg-indigo-600 text-white px-4 py-2 rounded disabled:opacity-50"
-                >
-                  Generate QR ({selectedIds.length})
-                </button> */}
-              </PrinterIcon>
-            </div>
+
+            <button
+              onClick={generateQr}
+              className="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-600 hover:bg-indigo-700 transition duration-200 shadow-md"
+            >
+              <PrinterIcon className="w-5 h-5 text-white" />
+            </button>
           </div>
+
           <Link
             to="/customerEntry"
-            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm"
+            className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl text-sm font-medium shadow-md transition duration-200"
           >
-            + Add Customer
+            + Add
           </Link>
         </div>
 
         {loading ? (
-          <p>Loading...</p>
+          <div className="p-10 text-center text-gray-500 text-lg">
+            Loading...
+          </div>
         ) : (
           <>
             {/* Table */}
-            <div className="overflow-x-auto border rounded-lg">
+            <div className="overflow-x-auto">
               <table className="min-w-[1100px] w-full text-sm">
-                <thead className="bg-gray-800 text-white">
-                  <tr>
-                    <th className="px-3 py-2">
+                <thead>
+                  <tr className="bg-slate-800 text-white text-sm uppercase tracking-wider">
+                    <th className="px-4 py-3 text-center">
                       <input
                         type="checkbox"
                         checked={
@@ -209,61 +358,93 @@ export default function Customer() {
                           selectedIds.length === currentData.length
                         }
                         onChange={toggleSelectAll}
+                        className="w-4 h-4"
                       />
                     </th>
-                    <th className="px-3 py-2">#</th>
-                    <th className="px-3 py-2">Profile</th>
-                    <th className="px-3 py-2">PNO</th>
-                    <th className="px-3 py-2">Full Name</th>
-                    <th className="px-3 py-2">Mobile</th>
-                    <th className="px-3 py-2">NID</th>
-                    <th className="px-3 py-2">Category</th>
-                    <th className="px-3 py-2">Entry By</th>
-                    <th className="px-3 py-2">Operation</th>
+                    <th className="px-4 py-3 text-center">#</th>
+                    <th className="px-4 py-3 text-center">Profile</th>
+                    <th className="px-4 py-3 text-left">PNO</th>
+                    <th className="px-4 py-3 text-left">Full Name</th>
+                    <th className="px-4 py-3 text-left">Mobile</th>
+                    <th className="px-4 py-3 text-left">NID</th>
+                    <th className="px-4 py-3 text-left">Category</th>
+                    <th className="px-4 py-3 text-left">Entry By</th>
+                    <th className="px-4 py-3 text-center">Operation</th>
                   </tr>
                 </thead>
-                <tbody>
+
+                <tbody className="divide-y divide-gray-200">
                   {currentData.map((item, idx) => (
-                    <tr key={item._id} className="border-b hover:bg-gray-50">
-                      <td className="px-3 py-2">
+                    <tr
+                      key={item._id}
+                      className="hover:bg-indigo-50 transition duration-150"
+                    >
+                      <td className="px-4 py-3 text-center">
                         <input
                           type="checkbox"
                           checked={selectedIds.includes(item._id)}
                           onChange={() => toggleSelect(item._id)}
+                          className="w-4 h-4"
                         />
                       </td>
-                      <td className="px-3 py-2">{startIndex + idx + 1}</td>
-                      <td className="px-3 py-2">
+
+                      <td className="px-4 py-3 text-center font-medium text-gray-600">
+                        {startIndex + idx + 1}
+                      </td>
+
+                      <td className="px-4 py-3 text-center">
                         <img
                           src={item.profileImage || "https://i.pravatar.cc/100"}
                           alt="profile"
-                          className="w-10 h-10 rounded-full border"
+                          className="w-11 h-11 rounded-full border-2 border-indigo-200 shadow-sm object-cover mx-auto"
                         />
                       </td>
+
                       <td
-                        className="px-3 py-2 cursor-pointer hover:text-green-500 hover:underline"
+                        className="px-4 py-3 cursor-pointer text-indigo-600 font-medium hover:underline"
                         onClick={() => showDetails(item._id)}
                       >
                         {item.pno}
                       </td>
-                      <td className="px-3 py-2">{item.fullName}</td>
-                      <td className="px-3 py-2">{item.primaryMobile}</td>
-                      <td className="px-3 py-2">{item.brNoOrNid}</td>
-                      <td className="px-3 py-2">{item.userCategory}</td>
-                      <td className="px-3 py-2">{item.entryBy || "system"}</td>
-                      <td className="px-3 py-2 flex gap-2 justify-center">
-                        <button
-                          onClick={() => openEditModal(item)}
-                          className="bg-cyan-500 hover:bg-cyan-600 text-white px-2 py-1 rounded text-xs"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => handleDelete(item._id)}
-                          className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-xs"
-                        >
-                          Delete
-                        </button>
+
+                      <td className="px-4 py-3 text-gray-700 font-medium">
+                        {item.fullName}
+                      </td>
+
+                      <td className="px-4 py-3 text-gray-600">
+                        {item.primaryMobile}
+                      </td>
+
+                      <td className="px-4 py-3 text-gray-600">
+                        {item.brNoOrNid}
+                      </td>
+
+                      <td className="px-4 py-3">
+                        <span className="px-3 py-1 text-xs rounded-full bg-indigo-100 text-indigo-700 font-medium">
+                          {item.userCategory}
+                        </span>
+                      </td>
+
+                      <td className="px-4 py-3 text-gray-600">
+                        {item.entryBy || "system"}
+                      </td>
+
+                      <td className="px-4 py-3">
+                        <div className="flex justify-center gap-2">
+                          <button
+                            onClick={() => openEditModal(item)}
+                            className="bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-xs font-medium shadow transition"
+                          >
+                            Edit
+                          </button>
+
+                          <button
+                            onClick={() => handleDelete(item._id)}
+                            className="bg-rose-500 hover:bg-rose-600 text-white px-3 py-1.5 rounded-lg text-xs font-medium shadow transition"
+                          >
+                            Delete
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -272,37 +453,45 @@ export default function Customer() {
             </div>
 
             {/* Pagination */}
-            <div className="flex justify-between items-center mt-4 text-sm">
-              <p className="text-gray-600">
-                Showing {startIndex + 1} to{" "}
-                {Math.min(startIndex + itemsPerPage, customers.length)} of{" "}
-                {customers.length}
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-6 border-t bg-gray-50 rounded-b-2xl">
+              <p className="text-gray-600 text-sm">
+                Showing <span className="font-semibold">{startIndex + 1}</span>{" "}
+                to{" "}
+                <span className="font-semibold">
+                  {Math.min(startIndex + itemsPerPage, customers.length)}
+                </span>{" "}
+                of <span className="font-semibold">{customers.length}</span>
               </p>
-              <div className="flex gap-1">
+
+              <div className="flex items-center gap-2">
                 <button
                   disabled={page === 1}
                   onClick={() => setPage(page - 1)}
-                  className="px-3 py-1 border rounded disabled:opacity-50"
+                  className="px-4 py-2 rounded-lg border bg-white hover:bg-gray-100 disabled:opacity-40 transition"
                 >
                   Previous
                 </button>
+
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map(
                   (p) => (
                     <button
                       key={p}
                       onClick={() => setPage(p)}
-                      className={`px-3 py-1 border rounded ${
-                        page === p ? "bg-blue-500 text-white" : ""
+                      className={`px-4 py-2 rounded-lg border transition ${
+                        page === p
+                          ? "bg-indigo-600 text-white border-indigo-600 shadow-md"
+                          : "bg-white hover:bg-gray-100"
                       }`}
                     >
                       {p}
                     </button>
                   ),
                 )}
+
                 <button
                   disabled={page === totalPages}
                   onClick={() => setPage(page + 1)}
-                  className="px-3 py-1 border rounded disabled:opacity-50"
+                  className="px-4 py-2 rounded-lg border bg-white hover:bg-gray-100 disabled:opacity-40 transition"
                 >
                   Next
                 </button>
@@ -328,426 +517,3 @@ export default function Customer() {
     </div>
   );
 }
-
-// ===============================
-// Edit Modal
-// ===============================
-// function EditModal({
-//   enrollmentData,
-//   setEnrollmentData,
-//   onClose,
-//   onUpdate,
-//   uploading,
-//   setUploading,
-// }) {
-//   const { setup, loadingSetup } = useSetup();
-
-//   if (!enrollmentData) return null;
-
-//   // universal change handler for modal
-//   const handleChange = (e) => {
-//     const { name, value, type, checked } = e.target;
-//     setEnrollmentData((prev) => ({
-//       ...prev,
-//       [name]: type === "checkbox" ? checked : value,
-//     }));
-//   };
-
-//   // image upload helper
-//   const handleImageUpload = async (fieldName, file) => {
-//     if (!file) return;
-//     try {
-//       setUploading(true);
-//       const url = await uploadImage(file);
-//       setEnrollmentData((prev) => ({ ...prev, [fieldName]: url }));
-//     } catch (err) {
-//       console.error(err);
-//       alert("Image upload failed!");
-//     } finally {
-//       setUploading(false);
-//     }
-//   };
-
-//   const registrationInfoOptions = ["New Registration", "Renew", "Transfer"];
-
-//   return (
-//     <div
-//       className="fixed inset-0 z-50 flex items-center justify-center p-3"
-//       role="dialog"
-//       aria-modal="true"
-//     >
-//       {/* Backdrop */}
-//       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-
-//       {/* Modal Box */}
-//       <div className="relative w-full max-w-6xl bg-white rounded-xl shadow-2xl overflow-y-auto max-h-[90vh] p-4">
-//         <div className="flex items-center justify-between bg-gray-800 text-white px-4 py-3 rounded-t-xl">
-//           <div className="font-semibold text-sm md:text-base">
-//             Edit Customer
-//           </div>
-//           <button
-//             onClick={onClose}
-//             className="w-8 h-8 rounded hover:bg-white/10 flex items-center justify-center"
-//           >
-//             ✕
-//           </button>
-//         </div>
-
-//         {/* ================= Personal Identification ================= */}
-//         <section className="mt-4">
-//           <h2 className="text-lg font-semibold border-b pb-2 mb-4">
-//             Personal Identification
-//           </h2>
-//           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-//             <Input
-//               label="PNO"
-//               required
-//               name="pno"
-//               value={enrollmentData.pno}
-//               onChange={handleChange}
-//             />
-//             <Select
-//               label="User Category"
-//               name="userCategory"
-//               value={enrollmentData.userCategory}
-//               onChange={handleChange}
-//               options={setup?.UserCategory || []}
-//             />
-//             <Select
-//               label="Official Rank"
-//               name="officialRank"
-//               value={enrollmentData.officialRank}
-//               onChange={handleChange}
-//               options={setup?.Rank || []}
-//             />
-//             <Input
-//               label="User Full Name"
-//               required
-//               className="md:col-span-2"
-//               name="fullName"
-//               value={enrollmentData.fullName}
-//               onChange={handleChange}
-//             />
-//             <Input
-//               label="BR NO / NID Number"
-//               required
-//               name="brNoOrNid"
-//               value={enrollmentData.brNoOrNid}
-//               onChange={handleChange}
-//             />
-//             <Input
-//               label="Primary Mobile No"
-//               required
-//               name="primaryMobile"
-//               value={enrollmentData.primaryMobile}
-//               onChange={handleChange}
-//             />
-//             <Input
-//               label="Alternative Mobile No"
-//               name="alternativeMobile"
-//               value={enrollmentData.alternativeMobile}
-//               onChange={handleChange}
-//             />
-//             <Input
-//               label="Email Address"
-//               type="email"
-//               name="email"
-//               value={enrollmentData.email}
-//               onChange={handleChange}
-//             />
-//             <Select
-//               label="Job Location"
-//               name="jobLocation"
-//               value={enrollmentData.jobLocation}
-//               onChange={handleChange}
-//               options={setup?.JobLocation || []}
-//             />
-//             <Select
-//               label="Blood Group"
-//               name="bloodGroup"
-//               value={enrollmentData.bloodGroup}
-//               onChange={handleChange}
-//               options={setup?.BloodGroup || []}
-//             />
-//             <Textarea
-//               label="Permanent Address"
-//               className="md:col-span-3"
-//               name="permanentAddress"
-//               value={enrollmentData.permanentAddress}
-//               onChange={handleChange}
-//             />
-//             <Upload
-//               label="Profile Image"
-//               onUpload={(file) => handleImageUpload("profileImage", file)}
-//             />
-//             {enrollmentData.profileImage && (
-//               <p className="text-xs text-green-700 md:col-span-3">
-//                 Profile Image Uploaded ✅
-//               </p>
-//             )}
-//           </div>
-//         </section>
-
-//         {/* ================= Vehicle Information ================= */}
-//         <section className="mt-6">
-//           <h2 className="text-lg font-semibold border-b pb-2 mb-4">
-//             Vehicle Information
-//           </h2>
-//           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-//             <Select
-//               label="Vehicle Type"
-//               required
-//               name="vehicleType"
-//               value={enrollmentData.vehicleType}
-//               onChange={handleChange}
-//               options={setup?.VehicleType || []}
-//             />
-//             <Select
-//               label="Vehicle Brand"
-//               required
-//               name="vehicleBrand"
-//               value={enrollmentData.vehicleBrand}
-//               onChange={handleChange}
-//               options={setup?.VehicleBrand || []}
-//             />
-//             <Select
-//               label="Vehicle Model"
-//               required
-//               name="vehicleModel"
-//               value={enrollmentData.vehicleModel}
-//               onChange={handleChange}
-//               options={setup?.VehicleModel || []}
-//             />
-//             <Select
-//               label="Enter Registration Info"
-//               required
-//               name="registrationInfo"
-//               value={enrollmentData.registrationInfo}
-//               onChange={handleChange}
-//               options={registrationInfoOptions}
-//             />
-//             <Input
-//               label="Registration No"
-//               required
-//               className="md:col-span-2"
-//               name="registrationNo"
-//               value={enrollmentData.registrationNo}
-//               onChange={handleChange}
-//             />
-//             <Input
-//               label="Chassis Number"
-//               required
-//               name="chassisNumber"
-//               value={enrollmentData.chassisNumber}
-//               onChange={handleChange}
-//             />
-//             <Input
-//               label="Engine Number"
-//               required
-//               name="engineNumber"
-//               value={enrollmentData.engineNumber}
-//               onChange={handleChange}
-//             />
-//             <Input
-//               type="date"
-//               label="Issue Date"
-//               required
-//               name="issueDate"
-//               value={enrollmentData.issueDate}
-//               onChange={handleChange}
-//             />
-//             <Input
-//               label="Validity"
-//               required
-//               name="validity"
-//               value={enrollmentData.validity}
-//               onChange={handleChange}
-//             />
-
-//             {/* Tax Token */}
-//             <div className="flex gap-2 items-end">
-//               <Input
-//                 label="Tax Token"
-//                 required
-//                 name="taxToken"
-//                 value={enrollmentData.taxToken}
-//                 onChange={handleChange}
-//               />
-//               <Upload
-//                 label="Tax Token Image"
-//                 onUpload={(file) => handleImageUpload("taxTokenImage", file)}
-//               />
-//               {enrollmentData.taxTokenImage && (
-//                 <p className="text-xs text-green-700 md:col-span-3">
-//                   Tax Token Image Uploaded ✅
-//                 </p>
-//               )}
-//             </div>
-
-//             {/* Fitness */}
-//             <div className="flex gap-2 items-end">
-//               <Input
-//                 label="Fitness"
-//                 name="fitness"
-//                 value={enrollmentData.fitness}
-//                 onChange={handleChange}
-//               />
-//               <Upload
-//                 label="Fitness Image"
-//                 onUpload={(file) => handleImageUpload("fitnessImage", file)}
-//               />
-//               {enrollmentData.fitnessImage && (
-//                 <p className="text-xs text-green-700 md:col-span-3">
-//                   Fitness Image Uploaded ✅
-//                 </p>
-//               )}
-//             </div>
-
-//             {/* Sticker */}
-//             <div className="flex gap-2 items-end">
-//               <Input
-//                 label="Sticker"
-//                 name="sticker"
-//                 value={enrollmentData.sticker}
-//                 onChange={handleChange}
-//               />
-//               <Upload
-//                 label="Sticker Image"
-//                 onUpload={(file) => handleImageUpload("stickerImage", file)}
-//               />
-//               {enrollmentData.stickerImage && (
-//                 <p className="text-xs text-green-700 md:col-span-3">
-//                   Sticker Image Uploaded ✅
-//                 </p>
-//               )}
-//             </div>
-//           </div>
-//         </section>
-
-//         {/* ================= Driving Information ================= */}
-//         <section className="mt-6">
-//           <h2 className="text-lg font-semibold border-b pb-2 mb-4">
-//             Driving Information
-//           </h2>
-//           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-//             <div>
-//               <label className="block text-sm font-medium mb-1">
-//                 Driving Type <span className="text-red-500">*</span>
-//               </label>
-//               <div className="flex gap-4">
-//                 <label className="flex items-center gap-2">
-//                   <input
-//                     type="radio"
-//                     name="drivingType"
-//                     value="OWN"
-//                     checked={enrollmentData.drivingType === "OWN"}
-//                     onChange={handleChange}
-//                   />
-//                   OWN
-//                 </label>
-//                 <label className="flex items-center gap-2">
-//                   <input
-//                     type="radio"
-//                     name="drivingType"
-//                     value="HIRED"
-//                     checked={enrollmentData.drivingType === "HIRED"}
-//                     onChange={handleChange}
-//                   />
-//                   HIRED
-//                 </label>
-//               </div>
-//             </div>
-
-//             <Input
-//               label="Driver NID No"
-//               required
-//               name="driverNidNo"
-//               value={enrollmentData.driverNidNo}
-//               onChange={handleChange}
-//             />
-//             <Upload
-//               label="Driver NID Image"
-//               onUpload={(file) => handleImageUpload("driverNidImage", file)}
-//             />
-//             {enrollmentData.driverNidImage && (
-//               <p className="text-xs text-green-700 md:col-span-3">
-//                 Driver Nid Image Uploaded ✅
-//               </p>
-//             )}
-
-//             <Input
-//               label="Driver Full Name"
-//               required
-//               name="driverName"
-//               value={enrollmentData.driverName}
-//               onChange={handleChange}
-//             />
-//             <Input
-//               label="Driving License No"
-//               required
-//               name="drivingLicenseNo"
-//               value={enrollmentData.drivingLicenseNo}
-//               onChange={handleChange}
-//             />
-//             <Input
-//               type="date"
-//               label="License Expire Date"
-//               required
-//               name="licenseExpireDate"
-//               value={enrollmentData.licenseExpireDate}
-//               onChange={handleChange}
-//             />
-//             <Upload
-//               label="Driver Image"
-//               onUpload={(file) => handleImageUpload("driverImage", file)}
-//             />
-//             {enrollmentData.driverImage && (
-//               <p className="text-xs text-green-700 md:col-span-3">
-//                 Driver Image Uploaded ✅
-//               </p>
-//             )}
-//           </div>
-//         </section>
-
-//         {/* ================= Buttons ================= */}
-//         {uploading && (
-//           <p className="text-sm text-blue-600 mt-2">Uploading image...</p>
-//         )}
-//         <div className="flex justify-end gap-4 pt-4">
-//           <button
-//             disabled={uploading}
-//             className="px-6 py-2 bg-blue-600 text-white rounded disabled:opacity-60"
-//             onClick={onUpdate}
-//           >
-//             UPDATE
-//           </button>
-//           <button
-//             type="button"
-//             className="px-6 py-2 bg-orange-500 text-white rounded hover:bg-orange-600"
-//             onClick={onClose}
-//           >
-//             CLOSE
-//           </button>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-// ===============================
-// Field Input Helper
-// ===============================
-// function FieldInput({ label, value, onChange }) {
-//   return (
-//     <div>
-//       <label className="text-xs font-semibold text-gray-600">{label}</label>
-//       <input
-//         type="text"
-//         value={value || ""}
-//         onChange={(e) => onChange(e.target.value)}
-//         className="mt-1 w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-//         placeholder={label}
-//       />
-//     </div>
-//   );
-// }

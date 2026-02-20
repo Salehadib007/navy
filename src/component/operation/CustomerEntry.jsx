@@ -1,19 +1,27 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { uploadImage } from "../../../utils/uploadImages.js";
 import { useSetup } from "../../../context/SetupContext";
-
-// TODO: replace with your real api instance import
+import { useRegistration } from "../../../context/RegistrationContext";
+import { useVehicle } from "../../../context/VehicleContext.jsx";
 import api from "../../../utils/api.js";
 
 export default function CustomerEntry() {
   const { setup, loadingSetup } = useSetup();
-  console.log(setup);
+  const { vehicles } = useVehicle();
+  const { registrations } = useRegistration();
 
-  // Manual options (not in Setup model)
-  const registrationInfoOptions = ["New Registration", "Renew", "Transfer"];
+  const [registrationParts, setRegistrationParts] = useState({
+    location: "",
+    unit: "",
+    serial: "",
+    year: "",
+  });
+
+  // Flatten arrays from RegistrationContext
+  const locationOptions = registrations.flatMap((r) => r.location || []);
+  const unitOptions = registrations.flatMap((r) => r.unit || []);
 
   const [enrollment, setEnrollment] = useState({
-    // ---------------- PERSONAL ----------------
     pno: "",
     officialRank: "",
     brNoOrNid: "",
@@ -26,8 +34,6 @@ export default function CustomerEntry() {
     email: "",
     bloodGroup: "",
     profileImage: "",
-
-    // ---------------- VEHICLE ----------------
     vehicleType: "",
     registrationInfo: "",
     registrationNo: "",
@@ -38,14 +44,11 @@ export default function CustomerEntry() {
     validity: "",
     fitness: "",
     fitnessImage: "",
-    vehicleModel: "",
     chassisNumber: "",
     engineNumber: "",
     sticker: "",
     stickerImage: "",
-
-    // ---------------- DRIVING ----------------
-    drivingType: "", // OWN | HIRED
+    drivingType: "",
     driverName: "",
     driverImage: "",
     driverNidNo: "",
@@ -56,32 +59,63 @@ export default function CustomerEntry() {
 
   const [uploading, setUploading] = useState(false);
 
-  // universal change handler (Input/Select/Textarea/Radio)
+  // universal change handler
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-
     setEnrollment((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
   };
 
+  // update registrationParts and generate registrationInfo
+  const handleRegistrationChange = (field, value) => {
+    setRegistrationParts((prev) => {
+      const updated = { ...prev, [field]: value };
+      const { location, unit, serial, year } = updated;
+
+      const combined =
+        (location || "") +
+        (unit ? "." + unit : "") +
+        (serial ? "." + serial : "") +
+        (year ? "." + year : "");
+
+      setEnrollment((prevEnroll) => ({
+        ...prevEnroll,
+        registrationInfo: combined,
+      }));
+
+      return updated;
+    });
+  };
+
+  // upload helper
+  const handleImageUpload = async (fieldName, file) => {
+    if (!file) return;
+    try {
+      setUploading(true);
+      const url = await uploadImage(file);
+      setEnrollment((prev) => ({ ...prev, [fieldName]: url }));
+    } catch (err) {
+      console.error(err);
+      alert("Image upload failed!");
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const handleSubmit = async () => {
     try {
-      // validation example
       if (!enrollment.pno || !enrollment.fullName) {
         alert("PNO and Full Name are required!");
         return;
       }
-      console.log(enrollment);
 
       await api.post("/enrollment", enrollment);
-
       alert("Enrollment saved successfully!");
 
-      // reset after submit
+      // reset
       setEnrollment({
-        // ---------------- PERSONAL ----------------
         pno: "",
         officialRank: "",
         brNoOrNid: "",
@@ -94,8 +128,6 @@ export default function CustomerEntry() {
         email: "",
         bloodGroup: "",
         profileImage: "",
-
-        // ---------------- VEHICLE ----------------
         vehicleType: "",
         registrationInfo: "",
         registrationNo: "",
@@ -106,13 +138,10 @@ export default function CustomerEntry() {
         validity: "",
         fitness: "",
         fitnessImage: "",
-        vehicleModel: "",
         chassisNumber: "",
         engineNumber: "",
         sticker: "",
         stickerImage: "",
-
-        // ---------------- DRIVING ----------------
         drivingType: "",
         driverName: "",
         driverImage: "",
@@ -121,282 +150,167 @@ export default function CustomerEntry() {
         driverNidImage: "",
         licenseExpireDate: "",
       });
+
+      setRegistrationParts({ location: "", unit: "", serial: "", year: "" });
     } catch (err) {
       console.error(err);
       alert(err?.response?.data?.message || "Failed to save enrollment!");
     }
   };
 
-  // upload helper
-  const handleImageUpload = async (fieldName, file) => {
-    if (!file) return;
-    try {
-      setUploading(true);
-      const url = await uploadImage(file);
-
-      setEnrollment((prev) => ({
-        ...prev,
-        [fieldName]: url,
-      }));
-    } catch (err) {
-      console.error(err);
-      alert("Image upload failed!");
-    } finally {
-      setUploading(false);
-    }
-  };
-
   return (
-    <div className="w-full p-4 md:p-8 bg-gray-100">
+    <div className="w-full bg-gray-200 min-h-screen p-4">
       {loadingSetup ? (
         <p>Loading setup...</p>
       ) : (
-        <div className="max-w-7xl mx-auto bg-white shadow rounded-lg p-4 md:p-6 space-y-8">
-          {/* ================= Personal Identification ================= */}
-          <section>
-            <h2 className="text-lg font-semibold border-b pb-2 mb-4">
+        <div className="w-full bg-white border border-gray-400">
+          {/* ---------------- PERSONAL ---------------- */}
+          <section className="border-b border-gray-400 p-4">
+            <h2 className="font-semibold text-sm mb-4 border-b border-gray-400 pb-1">
               Personal Identification
             </h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-3 text-sm">
               <Input
-                label="PNO"
-                required
+                label="* PNO"
                 name="pno"
                 value={enrollment.pno}
                 onChange={handleChange}
               />
-
               <Select
-                label="User Category"
+                label="* User Category"
                 name="userCategory"
                 value={enrollment.userCategory}
                 onChange={handleChange}
                 options={setup?.UserCategory || []}
               />
-
               <Select
-                label="Official Rank"
+                label="* Official Rank"
                 name="officialRank"
                 value={enrollment.officialRank}
                 onChange={handleChange}
                 options={setup?.Rank || []}
               />
-
               <Input
-                label="User Full Name"
-                required
+                label="* Full Name"
                 className="md:col-span-2"
                 name="fullName"
                 value={enrollment.fullName}
                 onChange={handleChange}
               />
-
               <Input
-                label="BR NO / NID Number"
-                required
-                name="brNoOrNid"
-                value={enrollment.brNoOrNid}
-                onChange={handleChange}
-              />
-
-              <Input
-                label="Primary Mobile No"
-                required
+                label="* Primary Mobile"
                 name="primaryMobile"
                 value={enrollment.primaryMobile}
                 onChange={handleChange}
               />
-
               <Input
-                label="Alternative Mobile No"
+                label="Alternative Mobile"
                 name="alternativeMobile"
                 value={enrollment.alternativeMobile}
                 onChange={handleChange}
               />
-
               <Input
-                label="Email Address"
-                type="email"
-                name="email"
-                value={enrollment.email}
+                label="* BR NO / NID"
+                name="brNoOrNid"
+                value={enrollment.brNoOrNid}
                 onChange={handleChange}
               />
-
               <Select
-                label="Job Location"
+                label="* Job Location"
                 name="jobLocation"
                 value={enrollment.jobLocation}
                 onChange={handleChange}
                 options={setup?.JobLocation || []}
               />
-
               <Select
-                label="Blood Group"
+                label="* Blood Group"
                 name="bloodGroup"
                 value={enrollment.bloodGroup}
                 onChange={handleChange}
                 options={setup?.BloodGroup || []}
               />
-
+              <Input
+                label="Email"
+                name="email"
+                value={enrollment.email}
+                onChange={handleChange}
+              />
               <Textarea
                 label="Permanent Address"
-                className="md:col-span-3"
+                className="md:col-span-2"
                 name="permanentAddress"
                 value={enrollment.permanentAddress}
                 onChange={handleChange}
               />
-
               <Upload
                 label="Profile Image"
-                onUpload={async (file) => {
-                  const url = await uploadImage(file);
-                  setEnrollment((prev) => ({ ...prev, profileImage: url }));
-                }}
+                onUpload={(file) => handleImageUpload("profileImage", file)}
               />
-
-              {enrollment.profileImage && (
-                <p className="text-xs text-green-700 md:col-span-3">
-                  Profile Image Uploaded ✅
-                </p>
-              )}
             </div>
           </section>
 
-          {/* ================= Vehicle Information ================= */}
-          <section>
-            <h2 className="text-lg font-semibold border-b pb-2 mb-4">
+          {/* ---------------- VEHICLE ---------------- */}
+          <section className="border-b border-gray-400 p-4">
+            <h2 className="font-semibold text-sm mb-4 border-b border-gray-400 pb-1">
               Vehicle Information
             </h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-3 text-sm">
               <Select
-                label="Vehicle Type"
-                required
+                label="* Vehicle Type"
                 name="vehicleType"
                 value={enrollment.vehicleType}
                 onChange={handleChange}
-                options={setup?.VehicleType || []}
+                options={vehicles?.map((v) => v.type) || []}
               />
-
               <Select
-                label="Vehicle Brand"
-                required
+                label="* Vehicle Brand"
                 name="vehicleBrand"
                 value={enrollment.vehicleBrand}
                 onChange={handleChange}
-                options={setup?.VehicleBrand || []}
+                options={setup?.VehicleBrand?.map((v) => v.split(".")[1]) || []}
               />
 
-              <Select
-                label="Vehicle Model"
-                required
-                name="vehicleModel"
-                value={enrollment.vehicleModel}
-                onChange={handleChange}
-                options={setup?.VehicleModel || []}
-              />
-
-              <Select
-                label="Enter Registration Info"
-                required
-                name="registrationInfo"
-                value={enrollment.registrationInfo}
-                onChange={handleChange}
-                options={registrationInfoOptions}
-              />
-
-              <Input
-                label="Registration No"
-                required
-                className="md:col-span-2"
-                name="registrationNo"
-                value={enrollment.registrationNo}
-                onChange={handleChange}
-              />
-
-              <Input
-                label="Chassis Number"
-                required
-                name="chassisNumber"
-                value={enrollment.chassisNumber}
-                onChange={handleChange}
-              />
-
-              <Input
-                label="Engine Number"
-                required
-                name="engineNumber"
-                value={enrollment.engineNumber}
-                onChange={handleChange}
-              />
-
-              <Input
-                type="date"
-                label="Issue Date"
-                required
-                name="issueDate"
-                value={enrollment.issueDate}
-                onChange={handleChange}
-              />
-
-              <Input
-                type="date"
-                label="Validity"
-                required
-                name="validity"
-                value={enrollment.validity}
-                onChange={handleChange}
-              />
-
-              <div className="flex gap-2 items-end">
+              {/* Registration Info */}
+              <div className="border rounded-xl p-4 space-y-4 bg-gray-50 md:col-span-3">
+                <h3 className="font-semibold text-gray-700">
+                  Registration Information
+                </h3>
+                <div className="grid md:grid-cols-4 gap-4">
+                  <Select
+                    label="Location"
+                    value={registrationParts.location}
+                    onChange={(e) =>
+                      handleRegistrationChange("location", e.target.value)
+                    }
+                    options={locationOptions}
+                  />
+                  <Select
+                    label="Unit"
+                    value={registrationParts.unit}
+                    onChange={(e) =>
+                      handleRegistrationChange("unit", e.target.value)
+                    }
+                    options={unitOptions}
+                  />
+                  <Input
+                    label="Serial"
+                    value={registrationParts.serial}
+                    onChange={(e) =>
+                      handleRegistrationChange(
+                        "serial",
+                        e.target.value.toUpperCase(),
+                      )
+                    }
+                  />
+                  <Input
+                    label="Year"
+                    value={registrationParts.year}
+                    onChange={(e) =>
+                      handleRegistrationChange("year", e.target.value)
+                    }
+                  />
+                </div>
                 <Input
-                  type="date"
-                  label="Tax Token"
-                  required
-                  name="taxToken"
-                  value={enrollment.taxToken}
-                  onChange={handleChange}
-                />
-                <Upload
-                  label="Tax Token Image"
-                  onUpload={async (file) => {
-                    const url = await uploadImage(file);
-                    setEnrollment((prev) => ({ ...prev, taxTokenImage: url }));
-                  }}
-                />
-                {enrollment.taxTokenImage && (
-                  <p className="text-xs text-green-700 md:col-span-3">
-                    Tax Token Image Uploaded ✅
-                  </p>
-                )}
-              </div>
-
-              <div className="flex gap-2 items-end">
-                <Input
-                  type="date"
-                  label="Fitness"
-                  name="fitness"
-                  value={enrollment.fitness}
-                  onChange={handleChange}
-                />
-                <Upload
-                  label="Fitness Image"
-                  onUpload={async (file) => {
-                    const url = await uploadImage(file);
-                    setEnrollment((prev) => ({ ...prev, fitnessImage: url }));
-                  }}
-                />
-                {enrollment.fitnessImage && (
-                  <p className="text-xs text-green-700 md:col-span-3">
-                    Fitness Image Uploaded ✅
-                  </p>
-                )}
-              </div>
-
-              <div className="flex gap-2 items-end">
-                <Input
-                  type="date"
                   label="Sticker"
                   name="sticker"
                   value={enrollment.sticker}
@@ -404,135 +318,137 @@ export default function CustomerEntry() {
                 />
                 <Upload
                   label="Sticker Image"
-                  onUpload={async (file) => {
-                    const url = await uploadImage(file);
-                    setEnrollment((prev) => ({ ...prev, stickerImage: url }));
-                  }}
+                  onUpload={(file) => handleImageUpload("stickerImage", file)}
                 />
-                {enrollment.stickerImage && (
-                  <p className="text-xs text-green-700 md:col-span-3">
-                    Sticker Image Uploaded ✅
-                  </p>
-                )}
               </div>
+
+              <Input
+                label="* Registration No"
+                className="md:col-span-2"
+                name="registrationNo"
+                value={enrollment.registrationNo}
+                onChange={handleChange}
+              />
+              <Input
+                label="* Chassis Number"
+                name="chassisNumber"
+                value={enrollment.chassisNumber}
+                onChange={handleChange}
+              />
+              <Input
+                label="* Engine Number"
+                name="engineNumber"
+                value={enrollment.engineNumber}
+                onChange={handleChange}
+              />
+              <Input
+                type="date"
+                label="* Issue Date"
+                name="issueDate"
+                value={enrollment.issueDate}
+                onChange={handleChange}
+              />
+              <Input
+                type="date"
+                label="* Validity"
+                name="validity"
+                value={enrollment.validity}
+                onChange={handleChange}
+              />
+              <Input
+                type="date"
+                label="* Tax Token"
+                name="taxToken"
+                value={enrollment.taxToken}
+                onChange={handleChange}
+              />
+              <Upload
+                label="Tax Token Image"
+                onUpload={(file) => handleImageUpload("taxTokenImage", file)}
+              />
             </div>
           </section>
 
-          {/* ================= Driving Information ================= */}
-          <section>
-            <h2 className="text-lg font-semibold border-b pb-2 mb-4">
+          {/* ---------------- DRIVING ---------------- */}
+          <section className="p-4">
+            <h2 className="font-semibold text-sm mb-4 border-b border-gray-400 pb-1">
               Driving Information
             </h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-3 text-sm">
               <div>
-                <label className="block text-sm font-medium mb-1">
-                  Driving Type <span className="text-red-500">*</span>
-                </label>
-
+                <label className="block mb-1">* Driving Type</label>
                 <div className="flex gap-4">
-                  <label className="flex items-center gap-2">
+                  <label>
                     <input
                       type="radio"
                       name="drivingType"
                       value="OWN"
                       checked={enrollment.drivingType === "OWN"}
                       onChange={handleChange}
-                    />
+                    />{" "}
                     OWN
                   </label>
-
-                  <label className="flex items-center gap-2">
+                  <label>
                     <input
                       type="radio"
                       name="drivingType"
                       value="HIRED"
                       checked={enrollment.drivingType === "HIRED"}
                       onChange={handleChange}
-                    />
+                    />{" "}
                     HIRED
                   </label>
                 </div>
               </div>
 
               <Input
-                label="Driver NID No"
-                required
+                label="* Driver NID NO"
                 name="driverNidNo"
                 value={enrollment.driverNidNo}
                 onChange={handleChange}
               />
-
               <Upload
                 label="Driver NID Image"
-                onUpload={async (file) => {
-                  const url = await uploadImage(file);
-                  setEnrollment((prev) => ({ ...prev, driverNidImage: url }));
-                }}
+                onUpload={(file) => handleImageUpload("driverNidImage", file)}
               />
-              {enrollment.driverNidImage && (
-                <p className="text-xs text-green-700 md:col-span-3">
-                  Driver Nid Image Uploaded ✅
-                </p>
-              )}
               <Input
-                label="Driver Full Name"
-                required
+                label="* Full Name"
                 name="driverName"
                 value={enrollment.driverName}
                 onChange={handleChange}
               />
-
+              <Upload
+                label="Driver Image"
+                onUpload={(file) => handleImageUpload("driverImage", file)}
+              />
               <Input
-                label="Driving License No"
-                required
+                label="* Driving License No"
                 name="drivingLicenseNo"
                 value={enrollment.drivingLicenseNo}
                 onChange={handleChange}
               />
-
               <Input
                 type="date"
-                label="License Expire Date"
-                required
+                label="* License Expire Date"
                 name="licenseExpireDate"
                 value={enrollment.licenseExpireDate}
                 onChange={handleChange}
               />
-
-              <Upload
-                label="Driver Image"
-                onUpload={async (file) => {
-                  const url = await uploadImage(file);
-                  setEnrollment((prev) => ({ ...prev, driverImage: url }));
-                }}
-              />
-              {enrollment.driverImage && (
-                <p className="text-xs text-green-700 md:col-span-3">
-                  Driver Image Uploaded ✅
-                </p>
-              )}
             </div>
           </section>
 
-          {/* ================= Buttons ================= */}
-          {uploading && (
-            <p className="text-sm text-blue-600">Uploading image...</p>
-          )}
-
-          <div className="flex justify-end gap-4 pt-4">
+          {/* ---------------- BUTTONS ---------------- */}
+          <div className="flex justify-end gap-4 p-4 border-t border-gray-400 bg-gray-100">
             <button
-              disabled={uploading}
-              className="px-6 py-2 bg-blue-600 text-white rounded disabled:opacity-60"
-              onClick={handleSubmit}
               type="button"
+              onClick={handleSubmit}
+              className="px-6 py-2 bg-blue-700 text-white text-sm"
             >
               SAVE
             </button>
-
             <button
               type="button"
-              className="px-6 py-2 bg-orange-500 text-white rounded hover:bg-orange-600"
+              className="px-6 py-2 bg-gray-500 text-white text-sm"
             >
               CLOSE
             </button>
@@ -544,7 +460,6 @@ export default function CustomerEntry() {
 }
 
 /* ================= Reusable Components ================= */
-
 function Input({
   label,
   required,
@@ -584,10 +499,11 @@ function Select({
 }) {
   return (
     <div className={className}>
-      <label className="block text-sm font-medium mb-1">
-        {label} {required && <span className="text-red-500">*</span>}
-      </label>
-
+      {label && (
+        <label className="block text-sm font-medium mb-1">
+          {label} {required && <span className="text-red-500">*</span>}
+        </label>
+      )}
       <select
         name={name}
         value={value}
@@ -595,10 +511,9 @@ function Select({
         className="w-full border rounded px-3 py-2 bg-white focus:outline-none focus:ring focus:ring-blue-300"
       >
         <option value="">{placeholder}</option>
-
         {options.map((opt, i) => (
           <option key={i} value={opt}>
-            {opt}
+            {typeof opt === "object" ? opt.value : opt}
           </option>
         ))}
       </select>

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import api from "../../../utils/api";
 import QRImage from "./QRImage";
+import { formatDate } from "../../../utils/formatDate";
 
 const AutoQRCode = () => {
   const location = useLocation();
@@ -59,7 +60,82 @@ const AutoQRCode = () => {
             justifyItems: "center",
           }}
         >
-          {enrollments.map((item) => {
+          {enrollments.map((item, index) => {
+            const formattedString = `
+Serial:${item.pno || ""}
+Name and Rank:${item.fullName || ""} ${item.officialRank || ""}
+O No:${item.brNoOrNid || ""}
+Tax:${formatDate(item.taxToken)}
+Reg No:${item.registrationNo || ""}
+Issue:${formatDate(item.issueDate)}
+Fitness:${formatDate(item.fitness)}
+Validity:${formatDate(item.validity)}
+Mobile:${item.primaryMobile || item.alternativeMobile || ""}
+`.trim();
+            // const url = `https://navy-ruddy.vercel.app/show-data/${item._id}`;
+            const url = formattedString;
+
+            return (
+              <div
+                key={item._id}
+                style={{
+                  border: "2px solid black",
+                  width: "280px",
+                  fontFamily: "Arial",
+                }}
+              >
+                {/* Top Section */}
+                <div style={{ display: "flex" }}>
+                  {/* QR Code */}
+                  <div
+                    style={{
+                      flex: 1,
+                      borderRight: "2px solid black",
+                      padding: "0px",
+                    }}
+                  >
+                    <QRImage value={url} />
+                  </div>
+
+                  {/* Serial Number */}
+                  <div
+                    style={{
+                      width: "50%",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontWeight: "bold",
+                      fontSize: "13px",
+                    }}
+                  >
+                    {String(index + 1).padStart(4, "0")}/25
+                  </div>
+                </div>
+
+                {/* Bottom Section */}
+                <div
+                  style={{
+                    borderTop: "2px solid black",
+                    padding: "4px",
+                    fontSize: "10px",
+                    textAlign: "left",
+                  }}
+                >
+                  <div>
+                    <strong>REG NO:</strong> {item.registrationNo}
+                  </div>
+                  <div>
+                    <strong>ISSUE DATE:</strong> {formatDate(item.issueDate)}
+                  </div>
+                  <div>
+                    <strong>VALIDITY:</strong> {formatDate(item.validity)}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+
+          {/* {enrollments.map((item) => {
             const url = `https://navy-ruddy.vercel.app/show-data/${item._id}`;
             // const url = `http://localhost:5173/show-data/${item._id}`;
 
@@ -83,7 +159,7 @@ const AutoQRCode = () => {
                 </div>
               </div>
             );
-          })}
+          })} */}
         </div>
       )}
 

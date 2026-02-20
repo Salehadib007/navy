@@ -8,7 +8,7 @@ const QRImage = ({ value }) => {
     QRCode.toDataURL(
       value,
       {
-        width: 300,
+        width: 200,
         margin: 2,
         errorCorrectionLevel: "H",
       },

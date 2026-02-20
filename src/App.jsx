@@ -31,6 +31,9 @@ import PrivateRoute from "./PrivateRoute";
 import AutoQRCode from "./component/admin/AutoCode";
 import VehiclePass from "./component/admin/VehiclePass";
 import EnrollmentDetails from "./component/operation/EnrollmentDetails";
+import AddRegistrationOptions from "./component/setup/AddRegistrationOptions";
+import VehicleTable from "./component/setup/VehicleTable";
+import VehicleDetails from "./component/setup/VehicleDetails";
 
 const App = () => {
   const { auth } = useAuth();
@@ -95,7 +98,7 @@ const App = () => {
         },
         {
           path: "vehicle-model",
-          element: can("Setup.VehicleModel") && <VehicleModel />,
+          element: <VehicleModel />,
         },
         { path: "employee", element: can("Setup.Employee") && <Employee /> },
         {
@@ -106,6 +109,10 @@ const App = () => {
           path: "designation",
           element: can("Setup.Designation") && <Designation />,
         },
+        {
+          path: "add-registration",
+          element: <AddRegistrationOptions />,
+        },
 
         // // REPORT / ADMIN
         {
@@ -113,6 +120,9 @@ const App = () => {
           element: can("CreateUser") && <Register></Register>,
         },
         // { path: "register", element: can("CreateUser") && <Users /> },
+        { path: "vehicle-table", element: <VehicleTable /> },
+        { path: "vehicle-details", element: <VehicleDetails /> },
+
         {
           path: "enrollment-list",
           element: can("Enrollment") && <AutoQRCode />,
