@@ -4,11 +4,23 @@ import { useSetup } from "../../../context/SetupContext";
 import { useRegistration } from "../../../context/RegistrationContext";
 import { useVehicle } from "../../../context/VehicleContext.jsx";
 import api from "../../../utils/api.js";
+import { formatDate } from "../../../utils/formatDate.js";
 
 export default function CustomerEntry() {
   const { setup, loadingSetup } = useSetup();
   const { vehicles } = useVehicle();
   const { registrations } = useRegistration();
+  // convert mm/dd/yyyy -> yyyy-mm-dd (for input type="date")
+  const toISODate = (value) => {
+    if (!value) return "";
+
+    const parts = value.split("/");
+    if (parts.length !== 3) return value;
+
+    const [mm, dd, yyyy] = parts; // <-- swapped order
+
+    return `${yyyy}-${mm.padStart(2, "0")}-${dd.padStart(2, "0")}`;
+  };
 
   const [registrationParts, setRegistrationParts] = useState({
     location: "",
@@ -328,6 +340,18 @@ export default function CustomerEntry() {
                   value={enrollment.stickerImage}
                   onUpload={(file) => handleImageUpload("stickerImage", file)}
                 />
+                <Input
+                  label="Tax Token"
+                  name="taxToken"
+                  value={enrollment.sticker}
+                  onChange={handleChange}
+                />
+
+                <Upload
+                  label="Tax Token Image"
+                  value={enrollment.taxTokenImage}
+                  onUpload={(file) => handleImageUpload("taxTokenImage", file)}
+                />
               </div>
 
               <Input
@@ -354,23 +378,38 @@ export default function CustomerEntry() {
                 label="* Issue Date"
                 name="issueDate"
                 value={enrollment.issueDate}
-                onChange={handleChange}
+                onChange={(e) =>
+                  setEnrollment((prev) => ({
+                    ...prev,
+                    issueDate: formatDate(e.target.value),
+                  }))
+                }
               />
+
               <Input
                 type="date"
                 label="* Validity"
                 name="validity"
                 value={enrollment.validity}
-                onChange={handleChange}
+                onChange={(e) =>
+                  setEnrollment((prev) => ({
+                    ...prev,
+                    validity: formatDate(e.target.value),
+                  }))
+                }
               />
               <Input
                 type="date"
                 label="* Tax Token"
                 name="taxToken"
                 value={enrollment.taxToken}
-                onChange={handleChange}
+                onChange={(e) =>
+                  setEnrollment((prev) => ({
+                    ...prev,
+                    taxToken: formatDate(e.target.value),
+                  }))
+                }
               />
-
               <Upload
                 label="Tax Token Image"
                 value={enrollment.taxTokenImage}
@@ -449,7 +488,12 @@ export default function CustomerEntry() {
                 label="* License Expire Date"
                 name="licenseExpireDate"
                 value={enrollment.licenseExpireDate}
-                onChange={handleChange}
+                onChange={(e) =>
+                  setEnrollment((prev) => ({
+                    ...prev,
+                    licenseExpireDate: formatDate(e.target.value),
+                  }))
+                }
               />
             </div>
           </section>
