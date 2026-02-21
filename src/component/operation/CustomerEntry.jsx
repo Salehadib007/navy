@@ -341,16 +341,16 @@ export default function CustomerEntry() {
                   onUpload={(file) => handleImageUpload("stickerImage", file)}
                 />
                 <Input
-                  label="Tax Token"
-                  name="taxToken"
-                  value={enrollment.sticker}
+                  label="Fitness"
+                  name="fitness"
+                  value={enrollment.fitness}
                   onChange={handleChange}
                 />
 
                 <Upload
-                  label="Tax Token Image"
-                  value={enrollment.taxTokenImage}
-                  onUpload={(file) => handleImageUpload("taxTokenImage", file)}
+                  label="Fitness Image"
+                  value={enrollment.fitnessImage}
+                  onUpload={(file) => handleImageUpload("fitnessImage", file)}
                 />
               </div>
 
