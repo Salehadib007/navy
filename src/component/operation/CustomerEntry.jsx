@@ -338,6 +338,27 @@ export default function CustomerEntry() {
                   value={enrollment.registrationNo}
                   onChange={handleChange}
                 />
+<<<<<<< HEAD
+=======
+
+                <Upload
+                  label="Sticker Image"
+                  value={enrollment.stickerImage}
+                  onUpload={(file) => handleImageUpload("stickerImage", file)}
+                />
+                <Input
+                  label="Fitness"
+                  name="fitness"
+                  value={enrollment.fitness}
+                  onChange={handleChange}
+                />
+
+                <Upload
+                  label="Fitness Image"
+                  value={enrollment.fitnessImage}
+                  onUpload={(file) => handleImageUpload("fitnessImage", file)}
+                />
+>>>>>>> 6a2b07ad7b5f382e7f403953374fbe1df313d871
               </div>
 
               <Input
