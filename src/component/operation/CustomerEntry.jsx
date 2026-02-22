@@ -5,6 +5,9 @@ import { useRegistration } from "../../../context/RegistrationContext";
 import { useVehicle } from "../../../context/VehicleContext.jsx";
 import api from "../../../utils/api.js";
 import { formatDate } from "../../../utils/formatDate.js";
+import DatePicker from "react-datepicker";
+
+import "react-datepicker/dist/react-datepicker.css";
 
 export default function CustomerEntry() {
   const { setup, loadingSetup } = useSetup();
@@ -329,37 +332,25 @@ export default function CustomerEntry() {
                 </div>
 
                 <Input
-                  label="Sticker"
-                  name="sticker"
-                  value={enrollment.sticker}
+                  label="* Registration No"
+                  className="md:col-span-2"
+                  name="registrationNo"
+                  value={enrollment.registrationNo}
                   onChange={handleChange}
-                />
-
-                <Upload
-                  label="Sticker Image"
-                  value={enrollment.stickerImage}
-                  onUpload={(file) => handleImageUpload("stickerImage", file)}
-                />
-                <Input
-                  label="Tax Token"
-                  name="taxToken"
-                  value={enrollment.sticker}
-                  onChange={handleChange}
-                />
-
-                <Upload
-                  label="Tax Token Image"
-                  value={enrollment.taxTokenImage}
-                  onUpload={(file) => handleImageUpload("taxTokenImage", file)}
                 />
               </div>
 
               <Input
-                label="* Registration No"
-                className="md:col-span-2"
-                name="registrationNo"
-                value={enrollment.registrationNo}
+                label="Sticker"
+                name="sticker"
+                value={enrollment.sticker}
                 onChange={handleChange}
+              />
+
+              <Upload
+                label="Sticker Image"
+                value={enrollment.stickerImage}
+                onUpload={(file) => handleImageUpload("stickerImage", file)}
               />
               <Input
                 label="* Chassis Number"
@@ -381,7 +372,7 @@ export default function CustomerEntry() {
                 onChange={(e) =>
                   setEnrollment((prev) => ({
                     ...prev,
-                    issueDate: formatDate(e.target.value),
+                    issueDate: e.target.value,
                   }))
                 }
               />
@@ -394,9 +385,21 @@ export default function CustomerEntry() {
                 onChange={(e) =>
                   setEnrollment((prev) => ({
                     ...prev,
-                    validity: formatDate(e.target.value),
+                    validity: e.target.value,
                   }))
                 }
+              />
+              <Input
+                label="Fitness"
+                name="fitness"
+                value={enrollment.fitness}
+                onChange={handleChange}
+              />
+
+              <Upload
+                label="Fitness Image"
+                value={enrollment.fitnessImage}
+                onUpload={(file) => handleImageUpload("fitnessImage", file)}
               />
               <Input
                 type="date"
@@ -406,7 +409,7 @@ export default function CustomerEntry() {
                 onChange={(e) =>
                   setEnrollment((prev) => ({
                     ...prev,
-                    taxToken: formatDate(e.target.value),
+                    taxToken: e.target.value,
                   }))
                 }
               />
@@ -491,7 +494,7 @@ export default function CustomerEntry() {
                 onChange={(e) =>
                   setEnrollment((prev) => ({
                     ...prev,
-                    licenseExpireDate: formatDate(e.target.value),
+                    licenseExpireDate: e.target.value,
                   }))
                 }
               />
@@ -537,13 +540,31 @@ function Input({
           {label} {required && <span className="text-red-500">*</span>}
         </label>
       )}
-      <input
-        type={type}
-        name={name}
-        value={value}
-        onChange={onChange}
-        className="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
-      />
+
+      {type === "date" ? (
+        <DatePicker
+          selected={value ? new Date(value) : null}
+          onChange={(date) =>
+            onChange({
+              target: {
+                name,
+                value: date, // pass Date object directly
+              },
+            })
+          }
+          dateFormat="dd/MM/yy"
+          className="w-[400px] border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+          placeholderText="dd/mm/yy"
+        />
+      ) : (
+        <input
+          type={type}
+          name={name}
+          value={value}
+          onChange={onChange}
+          className="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+        />
+      )}
     </div>
   );
 }

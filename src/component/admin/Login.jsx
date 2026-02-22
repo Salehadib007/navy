@@ -53,7 +53,7 @@ export default function Login() {
 
       <div className="relative z-10 w-full max-w-md bg-[#e9e8e2] rounded-md shadow-lg px-8 py-10">
         <div className="flex flex-col items-center mb-6">
-          <div className="w-20 h-20 mb-3">
+          <div className="w-20 h-20 mb-3 bg-transparent">
             <img
               src="navylogo.png"
               alt="Logo"
@@ -65,7 +65,7 @@ export default function Login() {
             <span className="text-blue-900">M</span>
           </h1>
           <p className="text-xs text-gray-600 text-center mt-1">
-            NAVAL PROVOST MARSHAL - BN STATION
+            NAVAL PROVOST MARSHAL - KHULNA
           </p>
         </div>
 
