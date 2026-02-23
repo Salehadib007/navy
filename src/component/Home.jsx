@@ -116,6 +116,9 @@ export default function Home() {
     data.filter((item) => isExpired(item.licenseExpireDate));
 
   const totalV = getTotalVehicles(enrollments);
+
+  // const totalV = getTotalVehicles(setup?.VehicleBrand);
+
   const activeV = getActiveVehicles(enrollments);
   const inactiveV = getInactiveVehicles(enrollments);
   const taxV = getTaxTokenExpired(enrollments);
@@ -130,14 +133,14 @@ export default function Home() {
   }, []);
 
   const tableShow = (items) => {
-    console.log(items);
+    // console.log(items);
 
     navigate("/vehicle-table", { state: items });
   };
   useEffect(() => {
     if (enrollments.length === 0) return;
 
-    const total = getTotalVehicles(enrollments).length;
+    const total = getTotalVehicles(setup?.VehicleBrand).length;
     const active = getActiveVehicles(enrollments).length;
     const inactive = getInactiveVehicles(enrollments).length;
     const taxExpired = getTaxTokenExpired(enrollments).length;

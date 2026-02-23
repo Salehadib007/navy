@@ -293,19 +293,17 @@ export default function Register() {
         return;
       }
 
-      // PATCH /auth/:id/password
       await api.patch(`/auth/${selectedUser._id}/password`, {
         password: resetForm.newPassword,
+        confirmPassword: resetForm.confirmPassword,
       });
 
       alert("Password updated successfully");
       closeResetModal();
     } catch (err) {
-      // console.log("Reset password error:", err);
       alert(err?.response?.data?.message || "Failed to reset password");
     }
   };
-
   /* =====================
      ESC CLOSE
   ===================== */

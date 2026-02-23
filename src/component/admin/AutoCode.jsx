@@ -44,7 +44,7 @@ const AutoQRCode = () => {
             const formattedString = `
 Serial:${item.pno || ""}
 Name and Rank:${item.fullName || ""} ${item.officialRank || ""}
-O No:${item.brNoOrNid || ""}
+BR/ID No:${item.brNoOrNid || ""}
 Tax:${formatDate(item.taxToken)}
 Reg No:${item.registrationNo || ""}
 Issue:${formatDate(item.issueDate)}
@@ -56,28 +56,30 @@ Mobile:${item.primaryMobile || item.alternativeMobile || ""}
             const url = formattedString;
 
             return (
-              <div key={item._id} className="qr-card w-full">
+              <div key={item._id} className="qr-card">
                 {/* Top Section */}
                 <div className="qr-top">
                   <div className="qr-image">
                     <QRImage value={url} />
                   </div>
 
-                  <div className="qr-serial">
-                    {String(index + 1).padStart(4, "0")}/25
-                  </div>
+                  <div className="qr-serial">{item.sticker}</div>
                 </div>
 
                 {/* Bottom Section */}
                 <div className="qr-bottom">
                   <div>
-                    <strong>REG NO:</strong> {item.registrationNo}
+                    <strong className="font-black">REG NO: </strong>
+                    {item.registrationNo}
                   </div>
                   <div>
-                    <strong>ISSUE DATE:</strong> {formatDate(item.issueDate)}
+                    <strong className="font-black">ISSUE DATE: </strong>
+                    {formatDate(item.issueDate)}
                   </div>
                   <div>
-                    <strong>VALIDITY:</strong> {formatDate(item.validity)}
+                    <strong className="font-black">
+                      VALIDITY: {formatDate(item.validity)}
+                    </strong>
                   </div>
                 </div>
               </div>
@@ -87,7 +89,7 @@ Mobile:${item.primaryMobile || item.alternativeMobile || ""}
       )}
 
       {/* Print Button */}
-      <div className="print:hidden print-button">
+      <div className="print:hidden print-button pt-4 ">
         <button onClick={() => window.print()}>Print / Save as PDF</button>
       </div>
 
@@ -145,7 +147,7 @@ Mobile:${item.primaryMobile || item.alternativeMobile || ""}
 
           .qr-image {
             flex: 1;
-            border-right: 1px solid black;
+            border: 1px solid black;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -157,7 +159,7 @@ Mobile:${item.primaryMobile || item.alternativeMobile || ""}
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            font-size: 10px;
+            font-size: 15px;
           }
 
           .qr-bottom {
@@ -182,40 +184,57 @@ Mobile:${item.primaryMobile || item.alternativeMobile || ""}
             background: black;
             color: white;
           }
-
           /* PRINT Layout */
           @media print {
-            body {
-              margin: 0;
-            }
 
-            .print\\:hidden {
-              display: none !important;
-            }
+  /* Reset page */
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+  }
 
-            .qr-wrapper {
-              padding: 5px;
-            }
+  /* Hide everything */
+  body * {
+    visibility: hidden !important;
+  }
 
-            .qr-grid {
-              display: grid;
-              grid-template-columns: repeat(4, 1fr);
-              gap: 10px;
-              width: 100%;
-            }
+  /* Show only QR wrapper */
+  .qr-wrapper,
+  .qr-wrapper * {
+    visibility: visible !important;
+  }
 
-            .qr-card {
-              width: 100%;
-              height: 33mm;   /* 8 rows per page */
-              max-width: none;
-              page-break-inside: avoid;
-            }
+  .qr-wrapper {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 8mm;
+  }
 
-            @page {
-              size: A4 portrait;
-              margin: 10mm;
-            }
-          }
+  /* Hide print button */
+  .print-button {
+    display: none !important;
+  }
+
+  /* Print grid layout */
+  .qr-grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5mm;
+  }
+
+  .qr-card {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  @page {
+    size: A4 portrait;
+    margin: 8mm;
+  }
+}
         `}
       </style>
     </div>

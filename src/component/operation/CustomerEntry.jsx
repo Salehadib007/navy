@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { uploadImage } from "../../../utils/uploadImages.js";
 import { useSetup } from "../../../context/SetupContext";
 import { useRegistration } from "../../../context/RegistrationContext";
@@ -13,17 +13,9 @@ export default function CustomerEntry() {
   const { setup, loadingSetup } = useSetup();
   const { vehicles } = useVehicle();
   const { registrations } = useRegistration();
-  // convert mm/dd/yyyy -> yyyy-mm-dd (for input type="date")
-  const toISODate = (value) => {
-    if (!value) return "";
 
-    const parts = value.split("/");
-    if (parts.length !== 3) return value;
-
-    const [mm, dd, yyyy] = parts; // <-- swapped order
-
-    return `${yyyy}-${mm.padStart(2, "0")}-${dd.padStart(2, "0")}`;
-  };
+  const serialRef = useRef(null);
+  const yearRef = useRef(null);
 
   const [registrationParts, setRegistrationParts] = useState({
     location: "",
@@ -88,15 +80,19 @@ export default function CustomerEntry() {
       const updated = { ...prev, [field]: value };
       const { location, unit, serial, year } = updated;
 
-      const combined =
-        (location || "") +
-        (unit ? "." + unit : "") +
-        (serial ? "." + serial : "") +
-        (year ? "." + year : "");
+      const formatted =
+        location && unit && serial?.length === 2 && year?.length === 4
+          ? `${location}-${unit}-${serial}-${year}`
+          : "";
 
       setEnrollment((prevEnroll) => ({
         ...prevEnroll,
-        registrationInfo: combined,
+        registrationInfo:
+          (location || "") +
+          (unit ? "." + unit : "") +
+          (serial ? "." + serial : "") +
+          (year ? "." + year : ""),
+        registrationNo: formatted, // <-- auto set
       }));
 
       return updated;
@@ -172,17 +168,17 @@ export default function CustomerEntry() {
   };
 
   return (
-    <div className="w-full bg-gray-200 min-h-screen p-4">
+    <div className="w-full bg-white min-h-screen p-2 text-[13px]">
       {loadingSetup ? (
         <p>Loading setup...</p>
       ) : (
-        <div className="w-full bg-white border border-gray-400">
+        <div className="w-full bg-white ">
           {/* ---------------- PERSONAL ---------------- */}
-          <section className="border-b border-gray-400 p-4">
-            <h2 className="font-semibold text-sm mb-4 border-b border-gray-400 pb-1">
+          <section className="border-b border-gray-400 px-4 py-3">
+            <h2 className="font-semibold text-[13px] mb-3 border-b border-gray-400 pb-1">
               Personal Identification
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-3 text-sm">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-2">
               <Input
                 label="* PNO"
                 name="pno"
@@ -210,18 +206,20 @@ export default function CustomerEntry() {
                 value={enrollment.fullName}
                 onChange={handleChange}
               />
-              <Input
-                label="* Primary Mobile"
-                name="primaryMobile"
-                value={enrollment.primaryMobile}
-                onChange={handleChange}
-              />
-              <Input
-                label="Alternative Mobile"
-                name="alternativeMobile"
-                value={enrollment.alternativeMobile}
-                onChange={handleChange}
-              />
+              <div className="flex gap-5">
+                <Input
+                  label="* Primary Mobile"
+                  name="primaryMobile"
+                  value={enrollment.primaryMobile}
+                  onChange={handleChange}
+                />
+                <Input
+                  label="Alternative Mobile"
+                  name="alternativeMobile"
+                  value={enrollment.alternativeMobile}
+                  onChange={handleChange}
+                />
+              </div>
               <Input
                 label="* BR NO / NID"
                 name="brNoOrNid"
@@ -267,11 +265,11 @@ export default function CustomerEntry() {
           </section>
 
           {/* ---------------- VEHICLE ---------------- */}
-          <section className="border-b border-gray-400 p-4">
-            <h2 className="font-semibold text-sm mb-4 border-b border-gray-400 pb-1">
+          <section className="border-b border-gray-400 px-4 py-3">
+            <h2 className="font-semibold text-[13px] mb-3 border-b border-gray-400 pb-1">
               Vehicle Information
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-3 text-sm">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-2">
               <Select
                 label="* Vehicle Type"
                 name="vehicleType"
@@ -295,8 +293,8 @@ export default function CustomerEntry() {
               />
 
               {/* Registration Info */}
-              <div className="border rounded-xl p-4 space-y-4 bg-gray-50 md:col-span-3">
-                <h3 className="font-semibold text-gray-700">
+              <div className="border border-gray-400 p-3 space-y-3 bg-[#f8f8f8] md:col-span-3">
+                <h3 className="font-semibold text-[13px]">
                   Registration Information
                 </h3>
                 <div className="grid md:grid-cols-4 gap-4">
@@ -316,18 +314,26 @@ export default function CustomerEntry() {
                   />
                   <Input
                     value={registrationParts.serial}
-                    onChange={(e) =>
-                      handleRegistrationChange(
-                        "serial",
-                        e.target.value.toUpperCase(),
-                      )
-                    }
+                    onChange={(e) => {
+                      const value = e.target.value.slice(0, 2);
+
+                      handleRegistrationChange("serial", value);
+
+                      // Auto move to year after 2 characters
+                      if (value.length === 2) {
+                        yearRef.current?.focus();
+                      }
+                    }}
+                    inputRef={serialRef}
                   />
                   <Input
                     value={registrationParts.year}
-                    onChange={(e) =>
-                      handleRegistrationChange("year", e.target.value)
-                    }
+                    onChange={(e) => {
+                      const value = e.target.value.slice(0, 4);
+
+                      handleRegistrationChange("year", value);
+                    }}
+                    inputRef={yearRef}
                   />
                 </div>
 
@@ -338,12 +344,63 @@ export default function CustomerEntry() {
                   value={enrollment.registrationNo}
                   onChange={handleChange}
                 />
+              </div>
+              <div className="flex w-[100%] gap-5">
+                <Input
+                  label="Sticker"
+                  name="sticker"
+                  value={enrollment.sticker}
+                  onChange={handleChange}
+                />
 
                 <Upload
                   label="Sticker Image"
                   value={enrollment.stickerImage}
                   onUpload={(file) => handleImageUpload("stickerImage", file)}
                 />
+              </div>
+              <div className="flex gap-5 w-full">
+                <Input
+                  label="* Chassis Number"
+                  name="chassisNumber"
+                  value={enrollment.chassisNumber}
+                  onChange={handleChange}
+                />
+                <Input
+                  label="* Engine Number"
+                  name="engineNumber"
+                  value={enrollment.engineNumber}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="flex gap-5">
+                <Input
+                  type="date"
+                  label="* Issue Date"
+                  name="issueDate"
+                  value={enrollment.issueDate}
+                  onChange={(e) =>
+                    setEnrollment((prev) => ({
+                      ...prev,
+                      issueDate: e.target.value,
+                    }))
+                  }
+                />
+
+                <Input
+                  type="date"
+                  label="* Validity"
+                  name="validity"
+                  value={enrollment.validity}
+                  onChange={(e) =>
+                    setEnrollment((prev) => ({
+                      ...prev,
+                      validity: e.target.value,
+                    }))
+                  }
+                />
+              </div>
+              <div className="flex gap-5">
                 <Input
                   label="Fitness"
                   name="fitness"
@@ -357,97 +414,37 @@ export default function CustomerEntry() {
                   onUpload={(file) => handleImageUpload("fitnessImage", file)}
                 />
               </div>
-
-              <Input
-                label="Sticker"
-                name="sticker"
-                value={enrollment.sticker}
-                onChange={handleChange}
-              />
-
-              <Upload
-                label="Sticker Image"
-                value={enrollment.stickerImage}
-                onUpload={(file) => handleImageUpload("stickerImage", file)}
-              />
-              <Input
-                label="* Chassis Number"
-                name="chassisNumber"
-                value={enrollment.chassisNumber}
-                onChange={handleChange}
-              />
-              <Input
-                label="* Engine Number"
-                name="engineNumber"
-                value={enrollment.engineNumber}
-                onChange={handleChange}
-              />
-              <Input
-                type="date"
-                label="* Issue Date"
-                name="issueDate"
-                value={enrollment.issueDate}
-                onChange={(e) =>
-                  setEnrollment((prev) => ({
-                    ...prev,
-                    issueDate: e.target.value,
-                  }))
-                }
-              />
-
-              <Input
-                type="date"
-                label="* Validity"
-                name="validity"
-                value={enrollment.validity}
-                onChange={(e) =>
-                  setEnrollment((prev) => ({
-                    ...prev,
-                    validity: e.target.value,
-                  }))
-                }
-              />
-              <Input
-                label="Fitness"
-                name="fitness"
-                value={enrollment.fitness}
-                onChange={handleChange}
-              />
-
-              <Upload
-                label="Fitness Image"
-                value={enrollment.fitnessImage}
-                onUpload={(file) => handleImageUpload("fitnessImage", file)}
-              />
-              <Input
-                type="date"
-                label="* Tax Token"
-                name="taxToken"
-                value={enrollment.taxToken}
-                onChange={(e) =>
-                  setEnrollment((prev) => ({
-                    ...prev,
-                    taxToken: e.target.value,
-                  }))
-                }
-              />
-              <Upload
-                label="Tax Token Image"
-                value={enrollment.taxTokenImage}
-                onUpload={(file) => handleImageUpload("taxTokenImage", file)}
-              />
+              <div className="flex gap-5">
+                <Input
+                  type="date"
+                  label="* Tax Token"
+                  name="taxToken"
+                  value={enrollment.taxToken}
+                  onChange={(e) =>
+                    setEnrollment((prev) => ({
+                      ...prev,
+                      taxToken: e.target.value,
+                    }))
+                  }
+                />
+                <Upload
+                  label="Tax Token Image"
+                  value={enrollment.taxTokenImage}
+                  onUpload={(file) => handleImageUpload("taxTokenImage", file)}
+                />
+              </div>
             </div>
           </section>
 
           {/* ---------------- DRIVING ---------------- */}
           <section className="p-4">
-            <h2 className="font-semibold text-sm mb-4 border-b border-gray-400 pb-1">
+            <h2 className="font-semibold text-[13px] mb-3 border-b border-gray-400 pb-1">
               Driving Information
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-3 text-sm">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-2">
               <div>
                 <label className="block mb-1">* Driving Type</label>
-                <div className="flex gap-4">
+                <div className="flex items-center gap-6 mt-1">
                   <label>
                     <input
                       type="radio"
@@ -470,67 +467,70 @@ export default function CustomerEntry() {
                   </label>
                 </div>
               </div>
+              <div className="flex gap-5">
+                <Input
+                  label="* Driver NID NO"
+                  name="driverNidNo"
+                  value={enrollment.driverNidNo}
+                  onChange={handleChange}
+                />
 
-              <Input
-                label="* Driver NID NO"
-                name="driverNidNo"
-                value={enrollment.driverNidNo}
-                onChange={handleChange}
-              />
+                <Upload
+                  label="Driver NID Image"
+                  value={enrollment.driverNidImage}
+                  onUpload={(file) => handleImageUpload("driverNidImage", file)}
+                />
+              </div>
+              <div className="flex gap-5">
+                <Input
+                  label="* Full Name"
+                  name="driverName"
+                  value={enrollment.driverName}
+                  onChange={handleChange}
+                />
 
-              <Upload
-                label="Driver NID Image"
-                value={enrollment.driverNidImage}
-                onUpload={(file) => handleImageUpload("driverNidImage", file)}
-              />
+                <Upload
+                  label="Driver Image"
+                  value={enrollment.driverImage}
+                  onUpload={(file) => handleImageUpload("driverImage", file)}
+                />
+              </div>
+              <div className="flex gap-5">
+                <Input
+                  label="* Driving License No"
+                  name="drivingLicenseNo"
+                  value={enrollment.drivingLicenseNo}
+                  onChange={handleChange}
+                />
 
-              <Input
-                label="* Full Name"
-                name="driverName"
-                value={enrollment.driverName}
-                onChange={handleChange}
-              />
-
-              <Upload
-                label="Driver Image"
-                value={enrollment.driverImage}
-                onUpload={(file) => handleImageUpload("driverImage", file)}
-              />
-
-              <Input
-                label="* Driving License No"
-                name="drivingLicenseNo"
-                value={enrollment.drivingLicenseNo}
-                onChange={handleChange}
-              />
-
-              <Input
-                type="date"
-                label="* License Expire Date"
-                name="licenseExpireDate"
-                value={enrollment.licenseExpireDate}
-                onChange={(e) =>
-                  setEnrollment((prev) => ({
-                    ...prev,
-                    licenseExpireDate: e.target.value,
-                  }))
-                }
-              />
+                <Input
+                  type="date"
+                  label="* License Expire Date"
+                  name="licenseExpireDate"
+                  value={enrollment.licenseExpireDate}
+                  onChange={(e) =>
+                    setEnrollment((prev) => ({
+                      ...prev,
+                      licenseExpireDate: e.target.value,
+                    }))
+                  }
+                />
+              </div>
             </div>
           </section>
 
           {/* ---------------- BUTTONS ---------------- */}
-          <div className="flex justify-end gap-4 p-4 border-t border-gray-400 bg-gray-100">
+          <div className="flex justify-end gap-3 px-4 py-3 border-t border-gray-400 bg-[#f0f0f0]">
             <button
               type="button"
               onClick={handleSubmit}
-              className="px-6 py-2 bg-blue-700 text-white text-sm"
+              className="px-6 py-1.5 bg-[#1f7a5c] text-white text-[13px] border border-[#1f7a5c]"
             >
               SAVE
             </button>
             <button
               type="button"
-              className="px-6 py-2 bg-gray-500 text-white text-sm"
+              className="px-6 py-1.5 bg-gray-600 text-white text-[13px] border border-gray-600"
             >
               CLOSE
             </button>
@@ -550,6 +550,7 @@ function Input({
   name,
   value,
   onChange,
+  inputRef,
 }) {
   return (
     <div className={className}>
@@ -570,17 +571,18 @@ function Input({
               },
             })
           }
-          dateFormat="dd/MM/yy"
-          className="w-[400px] border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+          dateFormat="dd MMM, yyyy"
+          className="w-full border border-gray-400 px-2 py-1 text-[13px] focus:outline-none"
           placeholderText="dd/mm/yy"
         />
       ) : (
         <input
+          ref={inputRef}
           type={type}
           name={name}
           value={value}
           onChange={onChange}
-          className="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+          className="w-full border border-gray-400 px-2 py-1 text-[13px] focus:outline-none"
         />
       )}
     </div>
@@ -608,7 +610,7 @@ function Select({
         name={name}
         value={value}
         onChange={onChange}
-        className="w-full border rounded px-3 py-2 bg-white focus:outline-none focus:ring focus:ring-blue-300"
+        className="w-full border border-gray-400 px-2 py-1 text-[13px] bg-white focus:outline-none"
       >
         <option value="">{placeholder}</option>
         {options.map((opt, i) => (
@@ -630,7 +632,7 @@ function Textarea({ label, className = "", name, value, onChange }) {
         name={name}
         value={value}
         onChange={onChange}
-        className="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+        className="w-full border border-gray-400 px-2 py-1 text-[13px] focus:outline-none"
       />
     </div>
   );
@@ -662,7 +664,11 @@ function Upload({ label, onUpload, value }) {
         <label className="block text-sm font-medium mb-1">{label}</label>
       )}
 
-      <input type="file" onChange={handleChange} className="w-full text-sm" />
+      <input
+        type="file"
+        onChange={handleChange}
+        className="w-full text-[12px] border border-gray-400 px-2 py-1 bg-white"
+      />
 
       {preview && (
         <img

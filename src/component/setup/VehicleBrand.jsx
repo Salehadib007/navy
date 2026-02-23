@@ -139,9 +139,9 @@ const VehicleBrand = () => {
   const filteredBrands = brands?.filter((b) =>
     b.toLowerCase().includes(search.toLowerCase()),
   );
-  console.log(brands);
+  // console.log(brands);
 
-  console.log(filteredBrands);
+  // console.log(filteredBrands);
 
   useEffect(() => {
     getBrands();

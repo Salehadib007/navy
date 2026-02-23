@@ -7,7 +7,7 @@ export default function VehicleTable() {
   const navigate = useNavigate();
 
   const vehicles = location.state;
-  console.log(vehicles);
+  // console.log(vehicles);
 
   const filtered = vehicles?.filter((v) =>
     `${v.vehicleType} ${v.vehicleBrand} ${v.registrationNo}`
@@ -21,7 +21,7 @@ export default function VehicleTable() {
 
   return (
     <div className="min-h-screen bg-slate-100 p-6">
-      <div className="max-w-7xl mx-auto bg-white rounded-xl shadow">
+      <div className="max-w-full mx-auto bg-white rounded-xl shadow">
         {/* Header */}
         <div className="p-4 border-b flex justify-between items-center">
           <h2 className="text-lg font-semibold">Vehicle List</h2>
