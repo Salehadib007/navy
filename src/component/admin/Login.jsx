@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../../../utils/api";
 import { useAuth } from "../../../context/AuthContext";
 import { useSetup } from "../../../context/SetupContext";
+import navyLogo from "../../assets/navyLogo.png";
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -55,7 +56,7 @@ export default function Login() {
         <div className="flex flex-col items-center mb-6">
           <div className="w-20 h-20 mb-3 bg-transparent">
             <img
-              src="/public/navyLogo.png"
+              src={navyLogo}
               alt="Logo"
               className="w-full h-full object-contain"
             />
