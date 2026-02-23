@@ -1,13 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import api from "../../../utils/api.js"; // your API utility
 import { formatDate } from "../../../utils/formatDate";
 
 const EnrollmentDetails = () => {
   const location = useLocation();
-  const enrollment = location.state?.enrollment[0];
-  const [selectedImage, setSelectedImage] = useState(null); // For modal
+  const enrollmentId = location.state?.enrollmentId;
+  console.log(enrollmentId);
+  // pass only ID when navigating
+  const [enrollment, setEnrollment] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [selectedImage, setSelectedImage] = useState(null);
 
-  if (!enrollment) return null;
+  // Fetch enrollment data from API
+  useEffect(() => {
+    const fetchEnrollment = async () => {
+      if (!enrollmentId) return;
+      try {
+        setLoading(true);
+        const { data } = await api.get(`/enrollment/${enrollmentId}`);
+        console.log(data);
+
+        setEnrollment(data[0]);
+      } catch (err) {
+        console.error(err);
+        alert("Failed to fetch enrollment data!");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchEnrollment();
+  }, [enrollmentId]);
+
+  if (loading) return <p className="p-4">Loading enrollment...</p>;
+  if (!enrollment) return <p className="p-4">Enrollment not found!</p>;
 
   const registrationParts = enrollment.registrationInfo
     ? enrollment.registrationInfo.split(".")
@@ -16,14 +42,16 @@ const EnrollmentDetails = () => {
   return (
     <div className="min-h-screen bg-gray-100 py-8 px-4 md:px-10">
       <div className="w-full max-w-6xl mx-auto space-y-10">
-        {/* ================= PROFILE HEADER ================= */}
+        {/* PROFILE HEADER */}
         <div className="bg-white border border-gray-200 rounded-2xl p-6 flex flex-col md:flex-row items-center md:items-start gap-6">
-          <img
-            src={enrollment.profileImage}
-            alt="Profile"
-            className="w-48 h-48 object-contain border border-gray-200 rounded-2xl cursor-pointer"
-            onClick={() => setSelectedImage(enrollment.profileImage)}
-          />
+          {enrollment.profileImage && (
+            <img
+              src={enrollment.profileImage}
+              alt="Profile"
+              className="w-48 h-48 object-contain border border-gray-200 rounded-2xl cursor-pointer"
+              onClick={() => setSelectedImage(enrollment.profileImage)}
+            />
+          )}
           <div className="text-center md:text-left space-y-2 flex-1">
             <h1 className="text-3xl font-semibold text-gray-900">
               {enrollment.fullName}
@@ -35,7 +63,7 @@ const EnrollmentDetails = () => {
           </div>
         </div>
 
-        {/* ================= PERSONAL INFO ================= */}
+        {/* PERSONAL INFO */}
         <Section title="Personal Information">
           <Info label="BR No / NID" value={enrollment.brNoOrNid} />
           <Info label="User Category" value={enrollment.userCategory} />
@@ -50,7 +78,7 @@ const EnrollmentDetails = () => {
           <Info label="Permanent Address" value={enrollment.permanentAddress} />
         </Section>
 
-        {/* ================= VEHICLE INFO ================= */}
+        {/* VEHICLE INFO */}
         <Section title="Vehicle Information">
           <Info label="Vehicle Type" value={enrollment.vehicleType} />
           <Info label="Vehicle Brand" value={enrollment.vehicleBrand} />
@@ -69,30 +97,35 @@ const EnrollmentDetails = () => {
           <Info label="Sticker" value={enrollment.sticker} />
           <Info label="Tax Token" value={enrollment.taxToken} />
 
+          {/* IMAGES */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-6">
-            <ImageCard
-              title="Tax Token"
-              src={enrollment.taxTokenImage}
-              onClick={setSelectedImage}
-            />
-            <ImageCard
-              title="Fitness"
-              src={enrollment.fitnessImage}
-              onClick={setSelectedImage}
-            />
-            <ImageCard
-              title="Sticker"
-              src={enrollment.stickerImage}
-              onClick={setSelectedImage}
-            />
+            {enrollment.taxTokenImage && (
+              <ImageCard
+                title="Tax Token"
+                src={enrollment.taxTokenImage}
+                onClick={setSelectedImage}
+              />
+            )}
+            {enrollment.fitnessImage && (
+              <ImageCard
+                title="Fitness"
+                src={enrollment.fitnessImage}
+                onClick={setSelectedImage}
+              />
+            )}
+            {enrollment.stickerImage && (
+              <ImageCard
+                title="Sticker"
+                src={enrollment.stickerImage}
+                onClick={setSelectedImage}
+              />
+            )}
           </div>
         </Section>
 
-        {/* ================= DRIVER INFO ================= */}
-        {/* ================= DRIVER INFO ================= */}
+        {/* DRIVER INFO */}
         <Section title="Driver Information">
           <div className="flex flex-col md:flex-row gap-8 items-start">
-            {/* Driver Image */}
             {enrollment.driverImage && (
               <div className="flex-shrink-0 w-full md:w-64">
                 <ImageCard
@@ -102,12 +135,10 @@ const EnrollmentDetails = () => {
                 />
               </div>
             )}
-
-            {/* Driver Details */}
-            <div className="w-[200px] flex flex-col gap-4 px-10">
+            <div className="w-full md:w-[300px] flex flex-col gap-4">
               <Info label="Driving Type" value={enrollment.drivingType} />
               <Info label="Driver Name" value={enrollment.driverName} />
-              <Info label="Driver NID" value={enrollment.driverNidNo} />
+              <Info label="Driver NID No" value={enrollment.driverNidNo} />
               <Info
                 label="Driving License No"
                 value={enrollment.drivingLicenseNo}
@@ -119,8 +150,9 @@ const EnrollmentDetails = () => {
             </div>
           </div>
         </Section>
-        <Section title="Driver's Nid">
-          {/* Driver NID Image */}
+
+        {/* DRIVER NID */}
+        <Section title="Driver's NID">
           {enrollment.driverNidImage && (
             <div className="mt-6 w-full md:w-1/2">
               <ImageCard
@@ -133,7 +165,7 @@ const EnrollmentDetails = () => {
         </Section>
       </div>
 
-      {/* ================= IMAGE MODAL ================= */}
+      {/* IMAGE MODAL */}
       {selectedImage && (
         <div
           className="fixed inset-0 bg-black bg-opacity-90 flex justify-center items-center z-50 cursor-pointer"
@@ -152,7 +184,7 @@ const EnrollmentDetails = () => {
 
 export default EnrollmentDetails;
 
-/* ================= Section Wrapper ================= */
+/* Section wrapper */
 const Section = ({ title, children }) => (
   <div className="bg-white border border-gray-200 rounded-2xl p-8">
     <h2 className="text-xl font-semibold text-gray-900 mb-6">{title}</h2>
@@ -162,7 +194,7 @@ const Section = ({ title, children }) => (
   </div>
 );
 
-/* ================= Reusable Components ================= */
+/* Reusable Info & ImageCard components */
 const Info = ({ label, value }) => (
   <div className="flex flex-col space-y-1">
     <span className="text-gray-500 text-xs uppercase tracking-wide">

@@ -105,9 +105,10 @@ export default function Customer() {
 
   const showDetails = async (id) => {
     const res = await api.get(`/enrollment/${id}`);
+    console.log(res.data[0]._id);
     navigate("/enrollment-details", {
       state: {
-        enrollment: res.data,
+        enrollmentId: res?.data[0]?._id,
       },
     });
   };
