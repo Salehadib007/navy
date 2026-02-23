@@ -55,7 +55,7 @@ export default function Login() {
         <div className="flex flex-col items-center mb-6">
           <div className="w-20 h-20 mb-3 bg-transparent">
             <img
-              src="navyLogo.png"
+              src="./navyLogo.png"
               alt="Logo"
               className="w-full h-full object-contain"
             />
