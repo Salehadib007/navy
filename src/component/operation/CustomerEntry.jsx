@@ -402,6 +402,7 @@ export default function CustomerEntry() {
               </div>
               <div className="flex gap-5">
                 <Input
+                  type="date"
                   label="Fitness"
                   name="fitness"
                   value={enrollment.fitness}
