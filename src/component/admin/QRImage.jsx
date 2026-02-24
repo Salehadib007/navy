@@ -9,7 +9,8 @@ const QRImage = ({ value }) => {
       value,
       {
         width: "100%",
-        margin: 2,
+        scale: 10,
+        margin: 4,
         errorCorrectionLevel: "H",
       },
       (err, url) => {

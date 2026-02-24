@@ -240,18 +240,17 @@ export default function CustomerEntry() {
                 onChange={handleChange}
                 options={setup?.BloodGroup || []}
               />
-              <Input
-                label="Email"
-                name="email"
-                value={enrollment.email}
-                onChange={handleChange}
-              />
-
               <Textarea
                 label="Permanent Address"
                 className="md:col-span-2"
                 name="permanentAddress"
                 value={enrollment.permanentAddress}
+                onChange={handleChange}
+              />
+              <Input
+                label="Email"
+                name="email"
+                value={enrollment.email}
                 onChange={handleChange}
               />
 
@@ -442,9 +441,9 @@ export default function CustomerEntry() {
             <h2 className="font-semibold text-[13px] mb-3 border-b border-gray-400 pb-1">
               Driving Information
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-2">
+            <div className="flex gap-x-6 gap-y-2">
               <div>
-                <label className="block mb-1">* Driving Type</label>
+                <label className=" mb-1">* Driving Type</label>
                 <div className="flex items-center gap-6 mt-1">
                   <label>
                     <input
@@ -468,7 +467,14 @@ export default function CustomerEntry() {
                   </label>
                 </div>
               </div>
-              <div className="flex gap-5">
+              <div className="flex justify-around flex-1 gap-5">
+                <Input
+                  label="* Full Name"
+                  className="flex-1"
+                  name="driverName"
+                  value={enrollment.driverName}
+                  onChange={handleChange}
+                />
                 <Input
                   label="* Driver NID NO"
                   name="driverNidNo"
@@ -481,22 +487,8 @@ export default function CustomerEntry() {
                   value={enrollment.driverNidImage}
                   onUpload={(file) => handleImageUpload("driverNidImage", file)}
                 />
-              </div>
-              <div className="flex gap-5">
-                <Input
-                  label="* Full Name"
-                  name="driverName"
-                  value={enrollment.driverName}
-                  onChange={handleChange}
-                />
-
-                <Upload
-                  label="Driver Image"
-                  value={enrollment.driverImage}
-                  onUpload={(file) => handleImageUpload("driverImage", file)}
-                />
-              </div>
-              <div className="flex gap-5">
+                {/* </div>
+              <div className="flex justify-around gap-5"> */}
                 <Input
                   label="* Driving License No"
                   name="drivingLicenseNo"
@@ -517,6 +509,13 @@ export default function CustomerEntry() {
                   }
                 />
               </div>
+            </div>
+            <div className="flex gap-5">
+              <Upload
+                label="Driving License Image"
+                value={enrollment.driverImage}
+                onUpload={(file) => handleImageUpload("driverImage", file)}
+              />
             </div>
           </section>
 
@@ -572,7 +571,7 @@ function Input({
               },
             })
           }
-          dateFormat="dd MMM, yyyy"
+          dateFormat="dd-MMM-yyyy"
           className="w-full border border-gray-400 px-2 py-1 text-[13px] focus:outline-none"
           placeholderText="dd/mm/yy"
         />

@@ -41,16 +41,8 @@ const AutoQRCode = () => {
       ) : (
         <div className="qr-grid">
           {enrollments.map((item, index) => {
-            const formattedString = `
-Serial:${item.pno || ""}
-Name and Rank:${item.fullName || ""} ${item.officialRank || ""}
-BR/ID No:${item.brNoOrNid || ""}
-Tax:${formatDate(item.taxToken)}
-Reg No:${item.registrationNo || ""}
-Issue:${formatDate(item.issueDate)}
-Fitness:${formatDate(item.fitness)}
-Validity:${formatDate(item.validity)}
-Mobile:${item.primaryMobile || item.alternativeMobile || ""}
+            const formattedString =
+              `Serial:${item.pno || ""} Name and Rank:${item.fullName || ""} ${item.officialRank || ""} BR/ID No:${item.brNoOrNid || ""} Tax:${formatDate(item.taxToken)} Reg No:${item.registrationNo || ""} Issue:${formatDate(item.issueDate)} Fitness:${formatDate(item.fitness)} Validity:${formatDate(item.validity)} Mobile:${item.primaryMobile || item.alternativeMobile || ""}
 `.trim();
 
             const url = formattedString;
@@ -63,7 +55,7 @@ Mobile:${item.primaryMobile || item.alternativeMobile || ""}
                     <QRImage value={url} />
                   </div>
 
-                  <div className="qr-serial">{item.sticker}</div>
+                  <div className="qr-serial">{item.enrollmentId}</div>
                 </div>
 
                 {/* Bottom Section */}
@@ -77,7 +69,7 @@ Mobile:${item.primaryMobile || item.alternativeMobile || ""}
                     {formatDate(item.issueDate)}
                   </div>
                   <div>
-                    <strong className="font-black">
+                    <strong className="font-black text-xs">
                       VALIDITY: {formatDate(item.validity)}
                     </strong>
                   </div>
@@ -135,7 +127,7 @@ Mobile:${item.primaryMobile || item.alternativeMobile || ""}
           }
 
           .qr-card {
-            border: 1px solid black;
+            border: 2px solid black;
             width: 100%;
             max-width: 220px;
             font-size: 9px;
@@ -147,14 +139,14 @@ Mobile:${item.primaryMobile || item.alternativeMobile || ""}
 
           .qr-image {
             flex: 1;
-            border: 1px solid black;
+            border-right: 2px solid black;
             display: flex;
             align-items: center;
             justify-content: center;
           }
 
           .qr-serial {
-            width: 55%;
+            width: 40%;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -163,7 +155,7 @@ Mobile:${item.primaryMobile || item.alternativeMobile || ""}
           }
 
           .qr-bottom {
-            border-top: 1px solid black;
+            border-top: 2px solid black;
             padding: 4px;
             text-align: left;
           }
@@ -174,7 +166,7 @@ Mobile:${item.primaryMobile || item.alternativeMobile || ""}
 
           .print-button button {
             padding: 10px 20px;
-            border: 1px solid black;
+            border: 2px solid black;
             background: white;
             font-weight: 600;
             cursor: pointer;

@@ -6,7 +6,7 @@ import { formatDate } from "../../../utils/formatDate";
 const EnrollmentDetails = () => {
   const location = useLocation();
   const enrollmentId = location.state?.enrollmentId;
-  console.log(enrollmentId);
+  // console.log(enrollmentId);
   // pass only ID when navigating
   const [enrollment, setEnrollment] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -19,7 +19,7 @@ const EnrollmentDetails = () => {
       try {
         setLoading(true);
         const { data } = await api.get(`/enrollment/${enrollmentId}`);
-        console.log(data);
+        // console.log(data);
 
         setEnrollment(data[0]);
       } catch (err) {
@@ -129,7 +129,7 @@ const EnrollmentDetails = () => {
             {enrollment.driverImage && (
               <div className="flex-shrink-0 w-full md:w-64">
                 <ImageCard
-                  title="Driver Image"
+                  title="Driving License Image"
                   src={enrollment.driverImage}
                   onClick={setSelectedImage}
                 />

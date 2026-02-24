@@ -856,7 +856,7 @@ export default function EditModal({
               <h3 className="font-semibold text-[13px] mb-2 border-b border-gray-300 pb-1">
                 Driving Information
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+              <div className="flex gap-2">
                 <div>
                   <label className="block mb-1">* Driving Type</label>
                   <div className="flex gap-4 mt-1">
@@ -883,7 +883,13 @@ export default function EditModal({
                   </div>
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex flex-1 justify-between flex-wrap gap-2">
+                  <Input
+                    label="* Driver Full Name"
+                    name="driverName"
+                    value={enrollmentInfo.driverName}
+                    onChange={handleChange}
+                  />
                   <Input
                     label="* Driver NID NO"
                     name="driverNidNo"
@@ -897,37 +903,29 @@ export default function EditModal({
                       handleImageUpload("driverNidImage", file)
                     }
                   />
+                  <div className="flex gap-2">
+                    <Input
+                      label="* Driving License No"
+                      name="drivingLicenseNo"
+                      value={enrollmentInfo.drivingLicenseNo}
+                      onChange={handleChange}
+                    />
+                    <Input
+                      type="date"
+                      label="* License Expire Date"
+                      name="licenseExpireDate"
+                      value={enrollmentInfo.licenseExpireDate}
+                      onChange={handleChange}
+                    />
+                  </div>
                 </div>
-
-                <div className="flex gap-2">
-                  <Input
-                    label="* Driver Full Name"
-                    name="driverName"
-                    value={enrollmentInfo.driverName}
-                    onChange={handleChange}
-                  />
-                  <Upload
-                    label="Driver Image"
-                    value={enrollmentInfo.driverImage}
-                    onUpload={(file) => handleImageUpload("driverImage", file)}
-                  />
-                </div>
-
-                <div className="flex gap-2">
-                  <Input
-                    label="* Driving License No"
-                    name="drivingLicenseNo"
-                    value={enrollmentInfo.drivingLicenseNo}
-                    onChange={handleChange}
-                  />
-                  <Input
-                    type="date"
-                    label="* License Expire Date"
-                    name="licenseExpireDate"
-                    value={enrollmentInfo.licenseExpireDate}
-                    onChange={handleChange}
-                  />
-                </div>
+              </div>
+              <div>
+                <Upload
+                  label="Driving License Image"
+                  value={enrollmentInfo.driverImage}
+                  onUpload={(file) => handleImageUpload("driverImage", file)}
+                />
               </div>
             </section>
 
@@ -974,7 +972,7 @@ function Input({
         <DatePicker
           selected={value ? new Date(value) : null}
           onChange={(date) => onChange({ target: { name, value: date } })}
-          dateFormat="dd MMM, yyyy"
+          dateFormat="dd-MMM-yyyy"
           className="w-full border border-gray-400 px-2 py-1 text-[13px] focus:outline-none"
         />
       ) : (
