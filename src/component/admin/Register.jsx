@@ -324,7 +324,7 @@ export default function Register() {
   ===================== */
   return (
     <div className="min-h-screen bg-slate-100 p-4">
-      <div className="max-w-6xl mx-auto bg-white rounded-2xl shadow-lg">
+      <div className="w-full mx-auto bg-white rounded-2xl shadow-lg">
         {/* HEADER */}
         <div className="px-4 py-4 border-b flex justify-between items-center gap-3">
           <div className="flex items-center gap-3">

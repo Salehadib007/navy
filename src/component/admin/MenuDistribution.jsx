@@ -86,7 +86,7 @@ export default function MenuDistribution() {
       Setup: availableSetupKeys, // frontend labels only
       Operation: ["Enrollment"],
       Admin: ["CreateUser", "MenuDistribution"],
-      Report: ["CustomerDetailsReport", "EnrollmentList"],
+      Report: ["EnrollmentList"],
     };
   }, [setup]);
 
@@ -183,7 +183,7 @@ export default function MenuDistribution() {
   // ===============================
   return (
     <div className="min-h-screen bg-slate-100 p-4">
-      <div className="max-w-6xl mx-auto space-y-4">
+      <div className="w-full mx-auto space-y-4">
         {/* Header */}
         <div className="bg-white rounded-2xl shadow p-4 flex items-center justify-between">
           <div>
