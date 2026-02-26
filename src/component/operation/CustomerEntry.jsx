@@ -302,7 +302,7 @@ export default function CustomerEntry() {
                     onChange={(e) =>
                       handleRegistrationChange("location", e.target.value)
                     }
-                    options={locationOptions}
+                    options={setup.BRTALocation}
                   />
                   <Select
                     value={registrationParts.unit}
