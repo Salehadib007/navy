@@ -309,7 +309,7 @@ export default function CustomerEntry() {
                     onChange={(e) =>
                       handleRegistrationChange("unit", e.target.value)
                     }
-                    options={unitOptions}
+                    options={setup.BRTADigit}
                   />
                   <Input
                     value={registrationParts.serial}
