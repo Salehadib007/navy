@@ -4,6 +4,7 @@ import api from "../../../utils/api"; // adjust path
 import EditModal from "./EditModal";
 import { useNavigate } from "react-router-dom";
 import { PrinterIcon } from "lucide-react";
+import CreatedBy from "./CreatedBy";
 // import QRCode from "qrcode";
 
 export default function Customer() {
@@ -11,6 +12,7 @@ export default function Customer() {
   // Enrollment Data
   // ===============================
   const [customers, setCustomers] = useState([]);
+  // const [enteredBy, setEnteredBy] = useState("Admin");
   const [loading, setLoading] = useState(true);
 
   // ===============================
@@ -70,6 +72,7 @@ export default function Customer() {
     try {
       setLoading(true);
       const res = await api.get("/enrollment");
+
       setCustomers(res.data || []);
     } catch (err) {
       console.error(err);
@@ -365,10 +368,10 @@ export default function Customer() {
                     <th className="px-4 py-3 text-center">#</th>
                     <th className="px-4 py-3 text-center">Profile</th>
                     <th className="px-4 py-3 text-left">PNO</th>
-                    <th className="px-4 py-3 text-left">Full Name</th>
+                    <th className="px-4 py-3 text-left">Rank & Full Name</th>
                     <th className="px-4 py-3 text-left">Mobile</th>
                     <th className="px-4 py-3 text-left">NID</th>
-                    <th className="px-4 py-3 text-left">Category</th>
+                    <th className="px-4 py-3 text-left">User Category</th>
                     <th className="px-4 py-3 text-left">Entry By</th>
                     <th className="px-4 py-3 text-center">Operation</th>
                   </tr>
@@ -409,7 +412,7 @@ export default function Customer() {
                       </td>
 
                       <td className="px-4 py-3 text-gray-700 font-medium">
-                        {item.fullName}
+                        {`${item.officialRank} ${item.fullName}`}
                       </td>
 
                       <td className="px-4 py-3 text-gray-600">
@@ -427,7 +430,7 @@ export default function Customer() {
                       </td>
 
                       <td className="px-4 py-3 text-gray-600">
-                        {item.entryBy || "system"}
+                        <CreatedBy createdBy={item.createdBy} />
                       </td>
 
                       <td className="px-4 py-3">

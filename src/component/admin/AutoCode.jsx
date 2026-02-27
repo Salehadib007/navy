@@ -41,9 +41,18 @@ const AutoQRCode = () => {
       ) : (
         <div className="qr-grid">
           {enrollments.map((item, index) => {
-            const formattedString =
-              `Serial:${item.pno || ""} Name and Rank:${item.fullName || ""} ${item.officialRank || ""} BR/ID No:${item.brNoOrNid || ""} Tax:${formatDate(item.taxToken)} Reg No:${item.registrationNo || ""} Issue:${formatDate(item.issueDate)} Fitness:${formatDate(item.fitness)} Validity:${formatDate(item.validity)} Mobile:${item.primaryMobile || item.alternativeMobile || ""}
-`.trim();
+            const formattedString = [
+              `Serial: ${item.pno || ""}`,
+              `Name: ${item.fullName || ""}`,
+              `Rank: ${item.officialRank || ""}`,
+              `BR/ID No: ${item.brNoOrNid || ""}`,
+              `Tax: ${formatDate(item.taxToken)}`,
+              `Reg No: ${item.registrationNo || ""}`,
+              `Issue: ${formatDate(item.issueDate)}`,
+              `Fitness: ${formatDate(item.fitness)}`,
+              `Validity: ${formatDate(item.validity)}`,
+              `Mobile: ${item.primaryMobile || item.alternativeMobile || ""}`,
+            ].join("\n");
 
             const url = formattedString;
 
@@ -61,11 +70,11 @@ const AutoQRCode = () => {
                 {/* Bottom Section */}
                 <div className="qr-bottom">
                   <div>
-                    <strong className="font-black">REG NO: </strong>
+                    <strong className="font-black ">REG NO: </strong>
                     {item.registrationNo}
                   </div>
                   <div>
-                    <strong className="font-black">ISSUE DATE: </strong>
+                    <strong className="font-black ">ISSUE DATE: </strong>
                     {formatDate(item.issueDate)}
                   </div>
                   <div>
@@ -146,7 +155,7 @@ const AutoQRCode = () => {
           }
 
           .qr-serial {
-            width: 40%;
+            width: 55%;
             display: flex;
             align-items: center;
             justify-content: center;
