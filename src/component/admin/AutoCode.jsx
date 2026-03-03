@@ -240,7 +240,7 @@ const AutoQRCode = () => {
 
   /* ===== QR IMAGE 2cm × 2cm ===== */
   .qr-image {
-    width: 1.9cm !important;
+    width: 1.8cm !important;
     height: 2cm !important;
     border-right: 1mm solid #000 !important;
     display: flex;
@@ -249,13 +249,13 @@ const AutoQRCode = () => {
   }
 
   .qr-image img {
-    width: 1.92cm !important;
-    height: 1.92cm !important;
+    width: 1.82cm !important;
+    height: 1.82cm !important;
   }
 
   /* ===== SERIAL 2.4cm × 2cm ===== */
   .qr-serial {
-    width: 2.3cm !important;
+    width: 2.4cm !important;
     height: 1.9cm !important;
     display: flex;
     align-items: center;
@@ -272,7 +272,7 @@ const AutoQRCode = () => {
   }
 
   .qr-row {
-    font-size: 7pt !important;
+    font-size: 6.1pt !important;
     line-height: 1.1 !important;
     letter-spacing: 0.5px;
     white-space: nowrap;
