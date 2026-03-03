@@ -249,8 +249,8 @@ const AutoQRCode = () => {
   }
 
   .qr-image img {
-    width: 1.82cm !important;
-    height: 1.82cm !important;
+    width: 1.92cm !important;
+    height: 1.92cm !important;
   }
 
   /* ===== SERIAL 2.4cm × 2cm ===== */
