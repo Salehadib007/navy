@@ -6,28 +6,48 @@ import { formatDate } from "../../../utils/formatDate";
 
 const AutoQRCode = () => {
   const location = useLocation();
-  const ids = location.state?.ids || [];
+
+  const selections = location.state?.ids || [];
+  // [{ id, serial }]
 
   const [loading, setLoading] = useState(true);
   const [enrollments, setEnrollments] = useState([]);
 
+  console.log(enrollments);
+
   useEffect(() => {
-    if (ids.length === 0) return;
+    if (selections.length === 0) return;
+
     const fetchData = async () => {
       try {
         setLoading(true);
+
+        const ids = selections.map((s) => s?.id);
+
         const res = await api.get(`/enrollment/${ids.join(",")}`);
-        setEnrollments(res.data.reverse());
+
+        // attach serials to returned enrollments
+        const mapped = res.data.map((enrollment) => {
+          const found = selections.find((s) => s.id === enrollment._id);
+
+          return {
+            ...enrollment,
+            serial: found?.serial || null,
+          };
+        });
+
+        setEnrollments(mapped.reverse());
       } catch (error) {
         console.error("Failed to fetch enrollments", error);
       } finally {
         setLoading(false);
       }
     };
-    fetchData();
-  }, [ids]);
 
-  if (ids.length === 0) return <p>No IDs provided</p>;
+    fetchData();
+  }, [selections]);
+
+  if (selections.length === 0) return <p>No IDs provided</p>;
 
   return (
     <div className="qr-wrapper">
@@ -40,7 +60,7 @@ const AutoQRCode = () => {
         <div className="qr-grid">
           {enrollments.map((item) => {
             const formattedString = [
-              `Serial: ${item.enrollmentId || ""}`,
+              `Serial: ${item.serial || ""}/${new Date(item.createdAt).getFullYear().toString().slice(-2) || ""}`,
               `Name and Rank: ${item.officialRank || ""} ${item.fullName || ""}`,
               `PNO No: ${item.pno || ""}`,
               `Tax: ${formatDate(item.taxToken)}`,
@@ -57,7 +77,7 @@ const AutoQRCode = () => {
                   <div className="qr-image">
                     <QRImage value={formattedString} />
                   </div>
-                  <div className="qr-serial">{item.enrollmentId}</div>
+                  <div className="qr-serial">{`${item.serial}/${new Date(item.createdAt).getFullYear().toString().slice(-2)}`}</div>
                 </div>
                 <div className="qr-bottom">
                   <div className="qr-row">

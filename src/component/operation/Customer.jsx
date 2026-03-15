@@ -32,19 +32,39 @@ export default function Customer() {
   const [uploading, setUploading] = useState(false);
 
   const [selectedIds, setSelectedIds] = useState([]);
+  console.log(selectedIds);
   const navigate = useNavigate();
 
-  const toggleSelect = (id) => {
-    setSelectedIds((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
-    );
+  const toggleSelect = (id, serial) => {
+    setSelectedIds((prev) => {
+      const exists = prev.find((x) => x.id === id && x.serial === serial);
+
+      if (exists) {
+        return prev.filter((x) => !(x.id === id && x.serial === serial));
+      }
+
+      return [...prev, { id, serial }];
+    });
   };
 
   const toggleSelectAll = () => {
-    if (selectedIds.length === currentData.length) {
+    const allSelected = currentData.every((item, idx) =>
+      selectedIds.some(
+        (s) =>
+          s.id === item._id &&
+          s.serial === String(startIndex + idx + 1).padStart(4, "0"),
+      ),
+    );
+
+    if (allSelected) {
       setSelectedIds([]);
     } else {
-      setSelectedIds(currentData.map((item) => item._id));
+      const newSelected = currentData.map((item, idx) => ({
+        id: item._id,
+        serial: String(startIndex + idx + 1).padStart(4, "0"),
+      }));
+
+      setSelectedIds(newSelected);
     }
   };
 
@@ -211,7 +231,15 @@ export default function Customer() {
                         type="checkbox"
                         checked={
                           currentData.length > 0 &&
-                          selectedIds.length === currentData.length
+                          currentData.every((item, idx) => {
+                            const serial = String(
+                              startIndex + idx + 1,
+                            ).padStart(4, "0");
+
+                            return selectedIds.some(
+                              (s) => s.id === item._id && s.serial === serial,
+                            );
+                          })
                         }
                         onChange={toggleSelectAll}
                         className="w-4 h-4"
@@ -238,14 +266,25 @@ export default function Customer() {
                       <td className="px-4 py-3 text-center">
                         <input
                           type="checkbox"
-                          checked={selectedIds.includes(item._id)}
-                          onChange={() => toggleSelect(item._id)}
+                          checked={selectedIds.some(
+                            (itemSel) =>
+                              itemSel.id === item._id &&
+                              itemSel.serial ===
+                                String(startIndex + idx + 1).padStart(4, "0"),
+                          )}
+                          onChange={() =>
+                            toggleSelect(
+                              item._id,
+                              String(startIndex + idx + 1).padStart(4, "0"),
+                            )
+                          }
                           className="w-4 h-4"
                         />
                       </td>
 
                       <td className="px-4 py-3 text-center font-medium text-gray-600">
-                        {startIndex + idx + 1}
+                        {/* {startIndex + idx + 1} */}
+                        {String(startIndex + idx + 1).padStart(4, "0")}
                       </td>
 
                       <td className="px-4 py-3 text-center">
