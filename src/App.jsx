@@ -35,6 +35,7 @@ import AddRegistrationOptions from "./component/setup/AddRegistrationOptions";
 import VehicleTable from "./component/setup/VehicleTable";
 import VehicleDetails from "./component/setup/VehicleDetails";
 import VehicleType from "./component/setup/VehicleType";
+import Report from "./component/Report";
 
 const App = () => {
   const { auth } = useAuth();
@@ -128,7 +129,7 @@ const App = () => {
           path: "register",
           element: can("CreateUser") && <Register></Register>,
         },
-        // { path: "register", element: can("CreateUser") && <Users /> },
+        { path: "report", element: <Report /> },
         { path: "vehicle-table", element: <VehicleTable /> },
         { path: "vehicle-details", element: <VehicleDetails /> },
 

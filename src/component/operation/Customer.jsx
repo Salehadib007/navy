@@ -284,7 +284,9 @@ export default function Customer() {
 
                       <td className="px-4 py-3 text-center font-medium text-gray-600">
                         {/* {startIndex + idx + 1} */}
-                        {String(startIndex + idx + 1).padStart(4, "0")}
+                        {String(startIndex + idx + 1).padStart(4, "0") +
+                          "/" +
+                          new Date().getFullYear().toString().slice(-2)}
                       </td>
 
                       <td className="px-4 py-3 text-center">

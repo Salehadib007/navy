@@ -1,3 +1,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Hide elements when printing */
+@media print {
+  .print\:hidden {
+    display: none !important;
+  }
+
+  body {
+    -webkit-print-color-adjust: exact;
+  }
+
+  /* Optional: Landscape mode */
+  @page {
+    size: landscape;
+    margin: 20px;
+  }
+}

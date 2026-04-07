@@ -565,6 +565,127 @@ export default function CustomerEntry() {
 
 /* ================= Reusable Components ================= */
 
+// function Input({
+//   label,
+//   required,
+//   type = "text",
+//   className = "",
+//   name,
+//   value,
+//   onChange,
+//   inputRef,
+//   searchable = false,
+//   options = [], // pass JobLocation array here if searchable
+// }) {
+//   const [query, setQuery] = useState(value || "");
+//   const [showOptions, setShowOptions] = useState(false);
+//   const wrapperRef = useRef(null);
+
+//   // Filter options based on query (startsWith, case-sensitive)
+//   const filteredOptions = query
+//     ? options.filter((opt) => opt.toLowerCase().startsWith(query))
+//     : options;
+
+//   // Close dropdown when clicking outside
+//   useEffect(() => {
+//     const handleClickOutside = (event) => {
+//       if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+//         setShowOptions(false);
+//       }
+//     };
+//     document.addEventListener("mousedown", handleClickOutside);
+//     return () => document.removeEventListener("mousedown", handleClickOutside);
+//   }, []);
+
+//   // Handle selection
+//   const handleSelect = (val) => {
+//     onChange({ target: { name, value: val } });
+//     setQuery(val);
+//     setShowOptions(false);
+//   };
+
+//   if (type === "date") {
+//     return (
+//       <div className={className}>
+//         {label && (
+//           <label className="block text-sm font-medium mb-1">
+//             {label} {required && <span className="text-red-500">*</span>}
+//           </label>
+//         )}
+//         <DatePicker
+//           selected={value ? new Date(value) : null}
+//           onChange={(date) => onChange({ target: { name, value: date } })}
+//           dateFormat="dd-MMM-yyyy"
+//           className="w-full border border-gray-400 px-2 py-1 text-[13px] focus:outline-none"
+//           placeholderText="dd/mm/yy"
+//           showMonthDropdown
+//           showYearDropdown
+//           dropdownMode="select"
+//         />
+//       </div>
+//     );
+//   }
+
+//   if (searchable) {
+//     return (
+//       <div className={`relative ${className}`} ref={wrapperRef}>
+//         {label && (
+//           <label className="block text-sm font-medium mb-1">
+//             {label} {required && <span className="text-red-500">*</span>}
+//           </label>
+//         )}
+
+//         <input
+//           type="text"
+//           name={name}
+//           value={query}
+//           onChange={(e) => {
+//             setQuery(e.target.value.toLowerCase());
+//             onChange(e);
+//             setShowOptions(true);
+//           }}
+//           onFocus={() => setShowOptions(true)}
+//           className="w-full border border-gray-400 px-2 py-1 text-[13px] focus:outline-none"
+//           placeholder="Type to search..."
+//         />
+
+//         {showOptions && filteredOptions.length > 0 && (
+//           <ul className="absolute z-10 w-full bg-white border border-gray-300 rounded-lg mt-1 max-h-48 overflow-y-auto shadow-lg">
+//             {filteredOptions.map((opt, idx) => (
+//               <li
+//                 key={idx}
+//                 onClick={() => handleSelect(opt)}
+//                 className="px-4 py-2 cursor-pointer hover:bg-indigo-100"
+//               >
+//                 {opt}
+//               </li>
+//             ))}
+//           </ul>
+//         )}
+//       </div>
+//     );
+//   }
+
+//   // Normal input
+//   return (
+//     <div className={className}>
+//       {label && (
+//         <label className="block text-sm font-medium mb-1">
+//           {label} {required && <span className="text-red-500">*</span>}
+//         </label>
+//       )}
+//       <input
+//         ref={inputRef}
+//         type={type}
+//         name={name}
+//         value={value}
+//         onChange={onChange}
+//         className="w-full border border-gray-400 px-2 py-1 text-[13px] focus:outline-none"
+//       />
+//     </div>
+//   );
+// }
+
 function Input({
   label,
   required,
@@ -575,18 +696,18 @@ function Input({
   onChange,
   inputRef,
   searchable = false,
-  options = [], // pass JobLocation array here if searchable
+  options = [],
 }) {
   const [query, setQuery] = useState(value || "");
   const [showOptions, setShowOptions] = useState(false);
+  const [highlightIndex, setHighlightIndex] = useState(0);
   const wrapperRef = useRef(null);
 
-  // Filter options based on query (startsWith, case-sensitive)
   const filteredOptions = query
-    ? options.filter((opt) => opt.toLowerCase().startsWith(query))
+    ? options.filter((opt) => opt.toLowerCase().startsWith(query.toLowerCase()))
     : options;
 
-  // Close dropdown when clicking outside
+  // Click outside to close dropdown
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
@@ -597,13 +718,38 @@ function Input({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Handle selection
   const handleSelect = (val) => {
     onChange({ target: { name, value: val } });
     setQuery(val);
     setShowOptions(false);
   };
 
+  const handleKeyDown = (e) => {
+    if (!showOptions) return;
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setHighlightIndex((prev) =>
+        prev < filteredOptions.length - 1 ? prev + 1 : prev,
+      );
+    }
+
+    if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setHighlightIndex((prev) => (prev > 0 ? prev - 1 : 0));
+    }
+
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const selected = filteredOptions[highlightIndex];
+      if (selected) handleSelect(selected);
+    }
+  };
+
+  const wrapperStyle =
+    "border border-gray-400 rounded focus-within:ring-2 focus-within:ring-indigo-400 focus-within:border-indigo-400 transition";
+
+  // DATE INPUT
   if (type === "date") {
     return (
       <div className={className}>
@@ -612,20 +758,25 @@ function Input({
             {label} {required && <span className="text-red-500">*</span>}
           </label>
         )}
-        <DatePicker
-          selected={value ? new Date(value) : null}
-          onChange={(date) => onChange({ target: { name, value: date } })}
-          dateFormat="dd-MMM-yyyy"
-          className="w-full border border-gray-400 px-2 py-1 text-[13px] focus:outline-none"
-          placeholderText="dd/mm/yy"
-          showMonthDropdown
-          showYearDropdown
-          dropdownMode="select"
-        />
+
+        <div className={wrapperStyle}>
+          <DatePicker
+            selected={value ? new Date(value) : null}
+            onChange={(date) => onChange({ target: { name, value: date } })}
+            dateFormat="dd-MMM-yyyy"
+            className="w-full px-2 py-1 text-[13px] focus:outline-none"
+            placeholderText="dd/mm/yy"
+            showMonthDropdown
+            showYearDropdown
+            dropdownMode="select"
+            tabIndex={0}
+          />
+        </div>
       </div>
     );
   }
 
+  // SEARCHABLE INPUT
   if (searchable) {
     return (
       <div className={`relative ${className}`} ref={wrapperRef}>
@@ -635,27 +786,39 @@ function Input({
           </label>
         )}
 
-        <input
-          type="text"
-          name={name}
-          value={query}
-          onChange={(e) => {
-            setQuery(e.target.value.toLowerCase());
-            onChange(e);
-            setShowOptions(true);
-          }}
-          onFocus={() => setShowOptions(true)}
-          className="w-full border border-gray-400 px-2 py-1 text-[13px] focus:outline-none"
-          placeholder="Type to search..."
-        />
+        <div className={wrapperStyle}>
+          <input
+            type="text"
+            name={name}
+            value={query}
+            tabIndex={0}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              onChange(e);
+              setShowOptions(true);
+              setHighlightIndex(0);
+            }}
+            onFocus={() => setShowOptions(true)}
+            onKeyDown={handleKeyDown}
+            className="w-full px-2 py-1 text-[13px] focus:outline-none"
+            placeholder="Type to search..."
+          />
+        </div>
 
         {showOptions && filteredOptions.length > 0 && (
           <ul className="absolute z-10 w-full bg-white border border-gray-300 rounded-lg mt-1 max-h-48 overflow-y-auto shadow-lg">
             {filteredOptions.map((opt, idx) => (
               <li
                 key={idx}
-                onClick={() => handleSelect(opt)}
-                className="px-4 py-2 cursor-pointer hover:bg-indigo-100"
+                onMouseDown={(e) => {
+                  e.preventDefault(); // prevents blur
+                  handleSelect(opt);
+                }}
+                className={`px-4 py-2 cursor-pointer ${
+                  idx === highlightIndex
+                    ? "bg-indigo-500 text-white"
+                    : "hover:bg-indigo-100"
+                }`}
               >
                 {opt}
               </li>
@@ -666,7 +829,7 @@ function Input({
     );
   }
 
-  // Normal input
+  // NORMAL INPUT
   return (
     <div className={className}>
       {label && (
@@ -674,18 +837,21 @@ function Input({
           {label} {required && <span className="text-red-500">*</span>}
         </label>
       )}
-      <input
-        ref={inputRef}
-        type={type}
-        name={name}
-        value={value}
-        onChange={onChange}
-        className="w-full border border-gray-400 px-2 py-1 text-[13px] focus:outline-none"
-      />
+
+      <div className={wrapperStyle}>
+        <input
+          ref={inputRef}
+          type={type}
+          name={name}
+          value={value}
+          onChange={onChange}
+          tabIndex={0}
+          className="w-full px-2 py-1 text-[13px] focus:outline-none"
+        />
+      </div>
     </div>
   );
 }
-
 function Select({
   label,
   required,
@@ -696,6 +862,9 @@ function Select({
   placeholder = "Select",
   className = "",
 }) {
+  const wrapperStyle =
+    "border border-gray-400 rounded focus-within:ring-2 focus-within:ring-indigo-400 focus-within:border-indigo-400 transition";
+
   return (
     <div className={className}>
       {label && (
@@ -703,38 +872,50 @@ function Select({
           {label} {required && <span className="text-red-500">*</span>}
         </label>
       )}
-      <select
-        name={name}
-        value={value}
-        onChange={onChange}
-        className="w-full border border-gray-400 px-2 py-1 text-[13px] bg-white focus:outline-none"
-      >
-        <option value="">{placeholder}</option>
-        {options.map((opt, i) => (
-          <option key={i} value={opt}>
-            {typeof opt === "object" ? opt.value : opt}
-          </option>
-        ))}
-      </select>
+
+      <div className={wrapperStyle}>
+        <select
+          name={name}
+          value={value}
+          onChange={onChange}
+          tabIndex={0}
+          className="w-full px-2 py-1 text-[13px] bg-white focus:outline-none"
+        >
+          <option value="">{placeholder}</option>
+          {options.map((opt, i) => (
+            <option key={i} value={typeof opt === "object" ? opt.value : opt}>
+              {typeof opt === "object" ? opt.value : opt}
+            </option>
+          ))}
+        </select>
+      </div>
     </div>
   );
 }
 
 function Textarea({ label, className = "", name, value, onChange }) {
+  const wrapperStyle =
+    "border border-gray-400 rounded focus-within:ring-2 focus-within:ring-indigo-400 focus-within:border-indigo-400 transition";
+
   return (
     <div className={className}>
-      <label className="block text-sm font-medium mb-1">{label}</label>
-      <textarea
-        rows="3"
-        name={name}
-        value={value}
-        onChange={onChange}
-        className="w-full border border-gray-400 px-2 py-1 text-[13px] focus:outline-none"
-      />
+      {label && (
+        <label className="block text-sm font-medium mb-1">{label}</label>
+      )}
+
+      <div className={wrapperStyle}>
+        <textarea
+          rows="3"
+          name={name}
+          value={value}
+          onChange={onChange}
+          tabIndex={0}
+          className="w-full px-2 py-1 text-[13px] focus:outline-none"
+        />
+      </div>
     </div>
   );
 }
-
 /* ================= UPLOAD COMPONENT WITH PREVIEW ================= */
 function Upload({ label, onUpload, value }) {
   const [preview, setPreview] = useState("");

@@ -103,8 +103,8 @@ export default function Navbar() {
         // { access: "CreateUser", label: "Create User", path: "/create-user" },
         {
           access: "Setup.Branch",
-          label: "Enrollment List",
-          path: "/enrollment-list",
+          label: "Active Vehicle Report",
+          path: "/report",
         },
       ],
     },
@@ -129,7 +129,7 @@ export default function Navbar() {
 
   return (
     auth && (
-      <nav className="bg-emerald-600 text-white px-4 py-1 relative z-50">
+      <nav className="bg-emerald-600 text-white px-4 py-1 relative z-50 print:hidden">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="w-20 h-10 flex items-center">
@@ -195,7 +195,7 @@ export default function Navbar() {
 
         {/* Mobile Menu */}
         {open && (
-          <ul className="md:hidden mt-3 bg-emerald-600 rounded-lg overflow-hidden">
+          <ul className="md:hidden mt-3 bg-emerald-600 rounded-lg overflow-hidden print:hidden">
             {menuItems.map((item, index) => (
               <li key={index} className="border-b border-emerald-500">
                 <div
