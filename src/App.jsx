@@ -138,6 +138,10 @@ const App = () => {
           element: can("Enrollment") && <AutoQRCode />,
         },
         {
+          path: "permit/:enrollmentId",
+          element: <EnrollmentProfileView />,
+        },
+        {
           path: "show-data/:id",
           element: <VehiclePass />,
         },
